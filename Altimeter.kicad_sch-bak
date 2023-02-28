@@ -1301,7 +1301,6 @@
     (uuid f2d188b4-88f1-4a5b-83bb-65b2f8e6799d)
   )
 
-  (no_connect (at 135.89 115.57) (uuid 4a741c40-9f3d-4b07-b532-f82c67991319))
   (no_connect (at 69.85 72.39) (uuid 51088ed1-115e-4f03-8174-d6c687a76876))
   (no_connect (at 69.85 74.93) (uuid 51088ed1-115e-4f03-8174-d6c687a76877))
   (no_connect (at 69.85 77.47) (uuid 86749bc6-b935-4c25-9994-054cf825bf11))
@@ -3892,9 +3891,6 @@
     )
     (path "/e4542fa2-96c5-41b9-8ec0-bde6fbe2c509/f86d55d5-3d03-454b-af35-d972c65ff155"
       (reference "#PWR0178") (unit 1) (value "+3.3V") (footprint "")
-    )
-    (path "/4373f5d0-1e9d-489b-aa26-9288beeb8cb3/21e341f0-cf5c-41d1-aec9-203df204d44d"
-      (reference "#PWR?") (unit 1) (value "GND") (footprint "")
     )
     (path "/00000000-0000-0000-0000-00005dc1f7e5"
       (reference "3V3LED1") (unit 1) (value "3V3LED") (footprint "Resistor_SMD:R_0402_1005Metric")

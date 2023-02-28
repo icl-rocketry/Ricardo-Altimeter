@@ -33,9 +33,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.4,
-          "height": 0.5,
-          "width": 0.5
+          "drill": 0.0,
+          "height": 0.1,
+          "width": 0.1
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -45,7 +45,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.19999999999999998
+          "min_clearance": 0.0
         }
       },
       "diff_pair_dimensions": [
@@ -124,12 +124,19 @@
         "use_height_for_length_calcs": true
       },
       "track_widths": [
-        0.0
+        0.0,
+        0.2,
+        0.8,
+        1.6
       ],
       "via_dimensions": [
         {
           "diameter": 0.0,
           "drill": 0.0
+        },
+        {
+          "diameter": 0.4,
+          "drill": 0.2
         }
       ],
       "zones_allow_external_fillets": false,
@@ -358,10 +365,10 @@
     "classes": [
       {
         "bus_width": 12.0,
-        "clearance": 0.2,
+        "clearance": 0.1,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.2,
+        "diff_pair_width": 0.1,
         "line_style": 0,
         "microvia_diameter": 0.3,
         "microvia_drill": 0.1,
@@ -432,10 +439,6 @@
     [
       "7db990e4-92e1-4f99-b4d2-435bbec1ba83",
       ""
-    ],
-    [
-      "00000000-0000-0000-0000-000061942b9a",
-      "CAN-BUS"
     ],
     [
       "00000000-0000-0000-0000-000061925999",
