@@ -46,7 +46,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.09999999999999999
+          "min_clearance": 0.19999999999999998
         }
       },
       "diff_pair_dimensions": [
@@ -61,7 +61,22 @@
           "width": 0.261112
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "courtyards_overlap|108176633|107333919|181743ff-74dc-4f2c-91cb-dcb6366eea9e|ad375982-9c56-4665-b3bb-446cbde097e0",
+        "courtyards_overlap|109443777|107101509|ad375982-9c56-4665-b3bb-446cbde097e0|dd038ad4-76ef-437e-9f4f-6b7fc7622117",
+        "courtyards_overlap|109458122|107664046|181743ff-74dc-4f2c-91cb-dcb6366eea9e|ad375982-9c56-4665-b3bb-446cbde097e0",
+        "courtyards_overlap|112495164|101048766|3de68843-f49f-4d91-9ac3-2bffbb83f5f5|b77412fa-2c8a-4619-beb4-cd7fe5704c2b",
+        "courtyards_overlap|113530000|87699999|46cfd089-6873-4d8b-89af-02ff30e49472|fc0a4225-db46-4d48-8163-d522602d57cd",
+        "courtyards_overlap|121899050|91787511|1436a783-6564-4cf1-b04a-2e5a11e5eb64|1eed5896-aa04-45cd-9356-be7e685c823f",
+        "hole_clearance|123920000|93985000|6f333751-c308-4e07-a9c5-fdc5ca51ca3d|29e7ed0d-4b15-4e05-9c78-a255a186eef5",
+        "hole_clearance|123920000|93985000|6f333751-c308-4e07-a9c5-fdc5ca51ca3d|65fcf161-a775-4f4c-8114-76dc819081bb",
+        "hole_clearance|123920000|94185000|6f333751-c308-4e07-a9c5-fdc5ca51ca3d|9d77fd46-e7db-43c4-ac31-31b830ede004",
+        "hole_clearance|123920000|94185000|6f333751-c308-4e07-a9c5-fdc5ca51ca3d|c27f6571-91d4-4a4a-9182-b3f17a77d115",
+        "hole_clearance|123920000|99585000|6e9d6281-5f2d-4eaf-a88a-21c3a3721e59|53a9dc5e-88c0-4659-90f0-68a9fb2c1e86",
+        "hole_clearance|123920000|99585000|6e9d6281-5f2d-4eaf-a88a-21c3a3721e59|c08e060a-3fd3-4a2e-a0a9-665707b6f193",
+        "hole_clearance|123920000|99785000|6e9d6281-5f2d-4eaf-a88a-21c3a3721e59|3eeaa441-7c1f-459e-8358-3bff184f2efd",
+        "hole_clearance|123920000|99785000|6e9d6281-5f2d-4eaf-a88a-21c3a3721e59|58b092f9-e530-4f7c-a73b-2c81223d6637"
+      ],
       "meta": {
         "version": 2
       },
@@ -119,11 +134,11 @@
         "allow_blind_buried_vias": false,
         "allow_microvias": false,
         "max_error": 0.005,
-        "min_clearance": 0.0,
+        "min_clearance": 0.09,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.3,
-        "min_hole_clearance": 0.25,
-        "min_hole_to_hole": 0.25,
+        "min_hole_clearance": 0.254,
+        "min_hole_to_hole": 0.254,
         "min_microvia_diameter": 0.19999999999999998,
         "min_microvia_drill": 0.09999999999999999,
         "min_resolved_spokes": 2,
@@ -182,6 +197,8 @@
       "track_widths": [
         0.0,
         0.0,
+        0.0,
+        0.15,
         0.2,
         0.4,
         0.8,

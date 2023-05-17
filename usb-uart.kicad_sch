@@ -1111,7 +1111,7 @@
     (property "Value" "USB_LED" (at 162.56 89.8144 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Footprint" "LED_SMD:LED_0603_1608Metric" (at 162.56 92.71 90)
+    (property "Footprint" "LED_SMD:LED_0402_1005Metric" (at 162.56 92.71 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 162.56 92.71 90)
