@@ -475,6 +475,9 @@
   (junction (at 90.17 118.11) (diameter 0) (color 0 0 0 0)
     (uuid 2d36679b-5526-42bd-b561-4f8758e0f2a0)
   )
+  (junction (at 120.65 93.98) (diameter 0) (color 0 0 0 0)
+    (uuid 30e10093-ab53-4712-a8cd-848975ec0702)
+  )
   (junction (at 186.69 74.93) (diameter 0) (color 0 0 0 0)
     (uuid 3151ecf3-568f-480a-8bdc-dedde854635c)
   )
@@ -575,10 +578,6 @@
   (wire (pts (xy 87.63 121.92) (xy 137.16 121.92))
     (stroke (width 0) (type default))
     (uuid 05632f64-707a-4e98-9baf-74dee0a0cdcf)
-  )
-  (wire (pts (xy 120.65 93.98) (xy 120.65 72.39))
-    (stroke (width 0) (type default))
-    (uuid 05f024b6-ff41-4127-9508-feef8d81ec6d)
   )
   (wire (pts (xy 102.87 102.87) (xy 106.68 102.87))
     (stroke (width 0) (type default))
@@ -688,6 +687,10 @@
     (stroke (width 0) (type default))
     (uuid 41eb4d59-2d95-4ae9-bfcc-ef48d9a8c18c)
   )
+  (wire (pts (xy 120.65 72.39) (xy 120.65 93.98))
+    (stroke (width 0) (type default))
+    (uuid 42e9cab4-30c1-4012-bead-295f193db71e)
+  )
   (wire (pts (xy 90.17 83.82) (xy 90.17 82.55))
     (stroke (width 0) (type default))
     (uuid 43eae0a7-7fc8-4bed-bdd8-0a84609e0ad5)
@@ -751,6 +754,10 @@
   (wire (pts (xy 167.64 92.71) (xy 167.64 93.98))
     (stroke (width 0) (type default))
     (uuid 6a2a33ed-294b-4309-8384-12ed7c058d02)
+  )
+  (wire (pts (xy 120.65 93.98) (xy 120.65 101.6))
+    (stroke (width 0) (type default))
+    (uuid 6bdbf769-79ce-4c0f-9491-8fd22863eec0)
   )
   (wire (pts (xy 144.78 72.39) (xy 146.05 72.39))
     (stroke (width 0) (type default))
@@ -996,7 +1003,7 @@
     (pin "1" (uuid 2bba3ec4-8118-46ec-870a-d47875143af3))
     (pin "2" (uuid 0b97f6c2-f044-45f1-a84f-3f4d365cc58c))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C22") (unit 1)
         )
@@ -1022,7 +1029,7 @@
     (pin "1" (uuid ae6c60b4-9539-4e29-b1c2-964e065cee8f))
     (pin "2" (uuid 803cff7d-0717-4463-812b-aa19b49f8417))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C21") (unit 1)
         )
@@ -1062,7 +1069,7 @@
     (pin "8" (uuid 6d7a3154-2069-4952-946a-7ddd86c198a8))
     (pin "9" (uuid bfbf779b-b834-47e4-8923-a17c7b811868))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "U7") (unit 1)
         )
@@ -1087,7 +1094,7 @@
     )
     (pin "1" (uuid d406046d-0dae-4235-a278-62236d94d2a4))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR048") (unit 1)
         )
@@ -1113,7 +1120,7 @@
     (pin "1" (uuid 0a135c99-4cae-4f2b-9046-55dff4203215))
     (pin "2" (uuid 680dd80f-5185-409a-88f2-f556cd9043f1))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C24") (unit 1)
         )
@@ -1138,7 +1145,7 @@
     )
     (pin "1" (uuid b5d41e5f-6a97-4a97-9f19-acd8908071f2))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR050") (unit 1)
         )
@@ -1163,7 +1170,7 @@
     )
     (pin "1" (uuid 4e2e9282-c1a8-4829-9ceb-2c3db91bc5cc))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR049") (unit 1)
         )
@@ -1188,7 +1195,7 @@
     )
     (pin "1" (uuid 89bf3d5c-f1c1-4241-9368-a83cb1f05962))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR040") (unit 1)
         )
@@ -1228,7 +1235,7 @@
     (pin "8" (uuid 6afddd32-6373-4206-8bb0-684b4b2adacd))
     (pin "9" (uuid b9f29080-7785-425c-92de-30ee837cb696))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "U6") (unit 1)
         )
@@ -1254,9 +1261,34 @@
     (pin "1" (uuid 100908d9-d32d-49da-90a1-c44b5fabf154))
     (pin "2" (uuid ed6745fe-0342-474c-9834-e6b8fa13226c))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C23") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:GND") (at 120.65 106.68 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 9e7aa440-add2-431b-acc3-00af66891469)
+    (property "Reference" "#PWR08" (at 120.65 113.03 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "GND" (at 120.65 111.76 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 120.65 106.68 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 120.65 106.68 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid aec3cb9c-b000-48ba-a3cd-70f615439d6d))
+    (instances
+      (project "Altimeter_super_thin"
+        (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
+          (reference "#PWR08") (unit 1)
         )
       )
     )
@@ -1280,7 +1312,7 @@
     (pin "1" (uuid 09c34984-85ea-4b49-9699-d8d99aef3d52))
     (pin "2" (uuid 0b2c1725-23fc-4445-a03d-658fcc7749e6))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C39") (unit 1)
         )
@@ -1305,7 +1337,7 @@
     )
     (pin "1" (uuid 34616cac-9836-43f0-b60b-25e717072ab6))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR041") (unit 1)
         )
@@ -1331,7 +1363,7 @@
     (pin "1" (uuid 4f380688-31d7-4fa1-8f6a-a4fc2b611f9d))
     (pin "2" (uuid 2d8cfaab-18e6-4400-b8af-2d247fecc309))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C19") (unit 1)
         )
@@ -1356,7 +1388,7 @@
     )
     (pin "1" (uuid 1a393db0-82b5-4784-97f4-ceb41cc1ce00))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR042") (unit 1)
         )
@@ -1382,7 +1414,7 @@
     (pin "1" (uuid bfe0b2f0-a264-4ef0-9270-9c3d6f796d04))
     (pin "2" (uuid 63e980f2-d6c0-47b0-aeca-d5c8c46be386))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C20") (unit 1)
         )
@@ -1408,7 +1440,7 @@
     (pin "1" (uuid 20d38ef2-9454-44be-9935-df738ebfcd26))
     (pin "2" (uuid bbe0d418-7f7a-48e6-835f-8f02bb80a20d))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C18") (unit 1)
         )
@@ -1433,7 +1465,7 @@
     )
     (pin "1" (uuid 2703e03a-eb4e-4977-9f3a-6b316f143c81))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR046") (unit 1)
         )
@@ -1458,7 +1490,7 @@
     )
     (pin "1" (uuid 6cdeaeeb-3e31-42f3-ab03-0a96f473b346))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR039") (unit 1)
         )
@@ -1483,7 +1515,7 @@
     )
     (pin "1" (uuid bb49f921-9060-4b71-879c-073b4744f7ed))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR045") (unit 1)
         )
@@ -1508,7 +1540,7 @@
     )
     (pin "1" (uuid eb270232-a91a-46c4-88cf-6ecb772184c3))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR047") (unit 1)
         )
@@ -1533,9 +1565,35 @@
     )
     (pin "1" (uuid 331f4901-9ed0-40bf-9806-7bb757b0657c))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR051") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Device:C_Small") (at 120.65 104.14 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid d6006e16-1c52-4742-a011-bedbf18d5643)
+    (property "Reference" "C12" (at 114.3 104.14 90)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "1uF" (at 116.84 104.14 90)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "Capacitor_SMD:C_0402_1005Metric" (at 120.65 104.14 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 120.65 104.14 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 85e618f2-8f43-4eb8-ba00-cf44ce7d24c2))
+    (pin "2" (uuid a2d6982c-d49e-4184-a52d-b40eb84c5a46))
+    (instances
+      (project "Altimeter_super_thin"
+        (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
+          (reference "C12") (unit 1)
         )
       )
     )
@@ -1558,7 +1616,7 @@
     )
     (pin "1" (uuid 7b671966-d903-4605-a190-e1621941e5d7))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR043") (unit 1)
         )
@@ -1584,7 +1642,7 @@
     (pin "1" (uuid 5268b626-e4eb-4550-8867-20ed5bb0353e))
     (pin "2" (uuid bbecec97-578e-40b5-9a36-00d33fb8b9c8))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "C17") (unit 1)
         )
@@ -1624,7 +1682,7 @@
     (pin "8" (uuid f3660ecf-85bb-4493-af4c-13ae67656d91))
     (pin "9" (uuid 5671ee13-03cd-4aa7-b0bd-d9a9f8428395))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "U5") (unit 1)
         )
@@ -1649,7 +1707,7 @@
     )
     (pin "1" (uuid 5dbe0d5e-a6ea-4e2c-9388-84ffd2411478))
     (instances
-      (project "Altimeter"
+      (project "Altimeter_super_thin"
         (path "/7db990e4-92e1-4f99-b4d2-435bbec1ba83/4373f5d0-1e9d-489b-aa26-9288beeb8cb3"
           (reference "#PWR044") (unit 1)
         )

@@ -181,6 +181,8 @@
       ],
       "track_widths": [
         0.0,
+        0.09,
+        0.1,
         0.15,
         0.2,
         0.4,
@@ -463,7 +465,7 @@
     "last_paths": {
       "gencad": "",
       "idf": "",
-      "netlist": "Altimeter.net",
+      "netlist": "Altimeter_super_thin.net",
       "specctra_dsn": "",
       "step": "",
       "vrml": ""
