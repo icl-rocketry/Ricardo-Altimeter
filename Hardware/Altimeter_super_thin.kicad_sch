@@ -9848,7 +9848,7 @@
 				)
 			)
 		)
-		(property "Value" "DPS310"
+		(property "Value" "DPS368"
 			(at 254 44.45 0)
 			(effects
 				(font
@@ -10062,7 +10062,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
+		(property "Value" "11pF"
 			(at 165.1 144.5514 90)
 			(effects
 				(font
@@ -11299,7 +11299,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
+		(property "Value" "11pF"
 			(at 163.83 124.2314 90)
 			(effects
 				(font
@@ -12664,7 +12664,7 @@
 				)
 			)
 		)
-		(property "Value" "40MHz±10ppm"
+		(property "Value" "R940000171"
 			(at 152.4 124.46 90)
 			(effects
 				(font
