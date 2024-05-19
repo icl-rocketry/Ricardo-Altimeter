@@ -1,4 +1,4 @@
-23321796168760357
+23333812772709375
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -95165,6 +95165,13 @@ SOIC127P600X170-9N
 15
 15
 iclr
+SON50P400X400X100-13N
+DNT0012B_-
+Integrated Circuit
+0
+13
+13
+iclr
 SOP40P640X120-14N
 
 
@@ -95389,6 +95396,20 @@ iclr_logo
 0
 0
 iclr
+iclr_logo_estd2018_6mm
+
+
+0
+0
+0
+iclr
+iclr_logo_estd2018_8mm
+
+
+0
+0
+0
+iclr
 iclr_logo_estd2018_10mm
 
 
@@ -95417,7 +95438,35 @@ microSIM GSM Card
 14
 7
 iclr
+nocap
+
+
+0
+0
+0
+iclr
 pickle_ric
+
+
+0
+0
+0
+iclr
+rae_logo_2mm
+
+
+0
+0
+0
+iclr
+rae_logo_4mm
+
+
+0
+0
+0
+iclr
+rae_logo_6mm
 
 
 0
