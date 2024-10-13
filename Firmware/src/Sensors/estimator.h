@@ -12,7 +12,6 @@
 #include "sensorStructs.h"
 
 
-
 enum class ESTIMATOR_STATE: uint8_t{
     NOMINAL,
     PARTIAL_NO_IMU,

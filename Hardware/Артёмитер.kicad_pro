@@ -472,7 +472,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "Altimeter_super_thin.kicad_pro",
+    "filename": "Артёмитер.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -510,7 +510,7 @@
       "plot": "",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "../../../../Downloads/Артёмитер.step",
       "svg": "",
       "vrml": ""
     },

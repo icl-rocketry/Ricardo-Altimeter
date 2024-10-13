@@ -15,20 +15,17 @@
 #include <Wire.h>
 
 
-#include <librrc/Remote/nrcremotepyro.h>
-
 #include "Commands/commands.h"
 
-#include "Network/Interfaces/radio.h"
-#include <libriccore/networkinterfaces/can/canbus.h>
 
 #include "Sensors/sensors.h"
 #include "Sensors/estimator.h"
 
 #include "Sound/tunezHandler.h"
 
-#include "ApogeeDetection/apogeedetect.h"
 #include <librnp/rnp_networkmanager.h>
+#include "Storage/nand_flash.h"
+#include "Storage/data_logger.h"
 
 class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 {
@@ -51,15 +48,16 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
         TunezHandler tunezhandler;
 
 
+        NAND_Flash nand_flash;
+        Data_Logger data_logger;
 
+        uint8_t* data_ptr;
 
     private:
 
         void setupSPI();
         void setupPins();
-        void configureNetwork();
         void loadConfig();
-        void logTelemetry();
 
 
         uint32_t telemetry_log_delta = 5000; //200hz

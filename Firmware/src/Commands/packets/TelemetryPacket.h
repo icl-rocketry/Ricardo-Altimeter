@@ -27,10 +27,10 @@ class TelemetryPacket : public RnpPacket{
                 &TelemetryPacket::q1,
                 &TelemetryPacket::q2,
                 &TelemetryPacket::q3,
-                &TelemetryPacket::lat,
-                &TelemetryPacket::lng,
-                &TelemetryPacket::alt,
-                &TelemetryPacket::sat,
+                // &TelemetryPacket::lat,
+                // &TelemetryPacket::lng,
+                // &TelemetryPacket::alt,
+                // &TelemetryPacket::sat,
                 &TelemetryPacket::ax,
                 &TelemetryPacket::ay,
                 &TelemetryPacket::az,
@@ -48,13 +48,13 @@ class TelemetryPacket : public RnpPacket{
                 &TelemetryPacket::baro_alt,
                 &TelemetryPacket::batt_voltage,
                 &TelemetryPacket::batt_percent,
-                &TelemetryPacket::launch_lat,
-                &TelemetryPacket::launch_lng,
-                &TelemetryPacket::launch_alt,
+                // &TelemetryPacket::launch_lat,
+                // &TelemetryPacket::launch_lng,
+                // &TelemetryPacket::launch_alt,
                 &TelemetryPacket::system_status,
-                &TelemetryPacket::system_time,
-                &TelemetryPacket::rssi,
-                &TelemetryPacket::snr
+                &TelemetryPacket::system_time
+                // &TelemetryPacket::rssi,
+                // &TelemetryPacket::snr
                 
 
                
@@ -84,7 +84,7 @@ class TelemetryPacket : public RnpPacket{
         //packet header
         //PacketHeader header{static_cast<uint8_t>(packet::TELEMETRY), packet_size()};
         //estimator output
-        float pn, pe, pd; // position NED (m)
+        float pn, pe, pd; // position NED (m) [North East Down]
         float vn, ve, vd; // velocity NED (m/s)
         float an, ae, ad; // acceleration NED (g's)
         //orientation

@@ -75,7 +75,7 @@ namespace SensorStructs
         Eigen::Vector3f acceleration;   //(ms-2) (NED)
         Eigen::Vector3f angularRates;   //(deg/s)
 
-        float baro_ref_alt;
+        float  baro_ref_alt;
         /**
          * @brief Estimator state -> maybe change this to be a bitfield lol
          * 

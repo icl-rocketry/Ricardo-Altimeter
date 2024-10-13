@@ -35,12 +35,12 @@ void DPS310::setup()
     // the dps library, while it pretends to check the product id and rev id, it actually only checks if it 
     //gets a response, so here we will proerply check if the prod id and rev id are as expected......
    
-    if (m_productID != 0 || m_revisionID != 1)
-    {
-        _systemstatus.newFlag(SYSTEM_FLAG::ERROR_BARO, "DPS310 failed to respond with expected prod and rev ID, Prod Id:" + std::to_string(m_productID) + ", Rev Id: " + std::to_string(m_revisionID));
-        return;
+    // if (m_productID != 0 || m_revisionID != 1)
+    // {
+    //     _systemstatus.newFlag(SYSTEM_FLAG::ERROR_BARO, "DPS310 failed to respond with expected prod and rev ID, Prod Id:" + std::to_string(m_productID) + ", Rev Id: " + std::to_string(m_revisionID));
+    //     return;
 
-    }
+    // }
 
     int error = startMeasureBothCont(temp_mr, temp_osr, press_mr, press_osr);
 

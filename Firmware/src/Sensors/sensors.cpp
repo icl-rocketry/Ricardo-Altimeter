@@ -54,13 +54,13 @@ void Sensors::setup(JsonObjectConst config){
     // std::array<bool,3> axesFlipMMC{0,0,1};
 
     std::array<uint8_t,3> axesOrderICM{1,0,2};
-    std::array<bool,3> axesFlipICM{0,0,1};
+    std::array<bool,3> axesFlipICM{0,1,0};
 
     std::array<uint8_t,3> axesOrderH3LIS{1,0,2};
-    std::array<bool,3> axesFlipH3LIS{1,1,1};
+    std::array<bool,3> axesFlipH3LIS{0,1,0};
 
-    std::array<uint8_t,3> axesOrderMMC{0,1,2};
-    std::array<bool,3> axesFlipMMC{1,0,0};
+    std::array<uint8_t,3> axesOrderMMC{1,0,2};
+    std::array<bool,3> axesFlipMMC{0,1,0};
 
     // setIfContains(config,"X_AXIS",axesOrderICM[0],false);
     // setIfContains(config,"Y_AXIS",axesOrderICM[1],false);
@@ -82,7 +82,7 @@ void Sensors::setup(JsonObjectConst config){
     accelgyro.setup(axesOrderICM,axesFlipICM);
     accel.setup(axesOrderH3LIS,axesFlipH3LIS);
     mag.setup(axesOrderMMC,axesFlipMMC);
-    // logicrail.setup(logicMaxVoltage,logicLowVoltage,logicMinVoltage);
+    logicrail.setup(logicMaxVoltage,logicLowVoltage,logicMinVoltage);
     
     
 };
@@ -101,7 +101,7 @@ void Sensors::update()
     accelgyro.update(sensors_raw.accelgyro);
     accel.update(sensors_raw.accel);
     mag.update(sensors_raw.mag);
-    // logicrail.update(sensors_raw.logicrail);
+    logicrail.update(sensors_raw.logicrail);
 
 };
 

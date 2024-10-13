@@ -8,6 +8,14 @@ private:
     static constexpr auto getSerializer()
     {
         auto ret = RnpSerializer(
+            // &TelemetryLogframe::gps_long,
+            // &TelemetryLogframe::gps_lat,
+            // &TelemetryLogframe::gps_alt,
+            // &TelemetryLogframe::gps_v_n,
+            // &TelemetryLogframe::gps_v_e,
+            // &TelemetryLogframe::gps_v_d,
+            // &TelemetryLogframe::gps_sat,
+            // &TelemetryLogframe::gps_fix,
             &TelemetryLogframe::ax,
             &TelemetryLogframe::ay,
             &TelemetryLogframe::az,
@@ -42,8 +50,8 @@ private:
             &TelemetryLogframe::an,
             &TelemetryLogframe::ae,
             &TelemetryLogframe::ad,
-            &TelemetryLogframe::rssi,
-            &TelemetryLogframe::snr,
+            // &TelemetryLogframe::rssi,
+            // &TelemetryLogframe::snr,
             &TelemetryLogframe::timestamp
             
            
@@ -77,7 +85,7 @@ public:
     float vn,ve,vd;
     //linear acceleration
     float an,ae,ad;
-    //radio details
+    // radio details
     int16_t rssi; 
     float snr;
 
@@ -87,5 +95,6 @@ public:
     std::string stringify()const{
         return getSerializer().stringify(*this) + "\n";
     };
+    
 
 };
