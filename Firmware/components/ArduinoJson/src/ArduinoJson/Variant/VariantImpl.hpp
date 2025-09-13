@@ -138,9 +138,8 @@ template <typename TDerived>
 template <typename T>
 typename enable_if<is_same<T, JsonVariant>::value, JsonVariant>::type
 VariantRefBase<TDerived>::to() const {
-  auto data = getOrCreateData();
-  variantSetNull(data);
-  return JsonVariant(getPool(), data);
+  variantSetNull(getOrCreateData());
+  return *this;
 }
 
 template <typename TDerived>

@@ -1,107 +1,34 @@
 #include "system.h"
+extern "C" {
+    #include "ff.h"
+}
+System::System():
+    RicCoreSystem(Commands::command_map,Commands::defaultEnabledCommands,Serial),
+    vspi(0),
+    hspi(1),
+    nandflash(vspi, PinMap::IC_Cs, PinMap::IC_WP, PinMap::IC_Hold),
+    filesystem(nandflash)
 
-#include <memory>
+{};
 
-#include <ArduinoJson.h>
-
-#include <libriccore/riccoresystem.h>
-#include <libriccore/storage/wrappedfile.h>
-
-
-#include "Config/systemflags_config.h"
-#include "Config/commands_config.h"
-#include "Config/pinmap_config.h"
-#include "Config/general_config.h"
-
-#include "Commands/commands.h"
-
-
-#include "Sensors/sensors.h"
-#include "Sensors/estimator.h"
-#include "Sensors/sensorStructs.h"
-#include "Sound/tunezHandler.h"
-
-
-#include "States/idle.h"
-
-
-
-#include "esp_system.h"
-#include <Arduino.h>
-
-
-#ifdef CONFIG_IDF_TARGET_ESP32S3
-static constexpr int VSPI_BUS_NUM = 0;
-static constexpr int HSPI_BUS_NUM = 1;
-#else
-static constexpr int VSPI_BUS_NUM = VSPI;
-static constexpr int HSPI_BUS_NUM = HSPI;
-#endif
-
-System::System() : RicCoreSystem(Commands::command_map, Commands::defaultEnabledCommands, Serial),
-                   vspi(VSPI_BUS_NUM),
-                   hspi(HSPI_BUS_NUM),
-                   sensors(hspi, systemstatus),
-                   estimator(systemstatus),
-                //    dhara_nand_flash(vspi, PinMap::IC_Cs, PinMap::IC_WP, PinMap::IC_Hold),
-                   nand_flash(vspi, PinMap::IC_Cs, PinMap::IC_WP, PinMap::IC_Hold),
-                   data_logger(nand_flash, PinMap::LED_RED, PinMap::LED_GREEN, PinMap::LED_BLUE)
-                   {};
-
-void System::systemSetup()
-{
-
+void System::systemSetup(){
+    
     Serial.setRxBufferSize(GeneralConfig::SerialRxSize);
     Serial.begin(GeneralConfig::SerialBaud);
-  
-    statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
-    setupPins();
-    // initalize spi interface
+
     setupSPI();
+    setupPins();
 
-    tunezhandler.setup();
+    statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
 
-    // add interfaces to netmanager
-    // configureNetwork();
+    delay(3000); //wait for printing purposes
 
-    
-    loadConfig();
+    Serial.println(filesystem.setup() ? "Filesystem mounted" : "Filesystem mount failed");
 
-    estimator.setup();
-    estimator.setHome(sensors.getData());
-
-
-    data_logger.setup();
-    
-    data_ptr = (uint8_t*)malloc(140); 
-    if (data_ptr == nullptr) {
-        // Handle memory allocation failure
-        Serial.println("Memory allocation failed");
-        return;
-    }
-
-    // nand_flash.setup();
+     
 };
 
-void System::systemUpdate()
-{
-    // tunezhandler.update();
-    sensors.update();
-    estimator.update(sensors.getData());
-    data_logger.update(sensors.getData(), estimator.getData(), data_ptr);
-    // data_logger.read_meta_data();
-    
-    // for (int i = 0; i < 4; i++) {
-    //     nand_flash.read_page(0, i);
-    //     Serial.print("Page " + String(i) + ": ");
-    //     for (int j = 0; j < 2048; j++) {
-    //         Serial.print(nand_flash.cache_ptr[j]);
-    //         Serial.print(" ");
-    //     }
-    //     Serial.println();
-    // }
-
-    // delay(100000);
+void System::systemUpdate(){
 
 };
 
@@ -113,7 +40,7 @@ void System::setupSPI()
     hspi.setDataMode(SPI_MODE0);
 
     vspi.begin(PinMap::IC_SCLK,PinMap::IC_MISO,PinMap::IC_MOSI);
-    vspi.setFrequency(8000000);
+    vspi.setFrequency(1000000);
     vspi.setBitOrder(MSBFIRST);
     vspi.setDataMode(SPI_MODE0); // Set the SPI data mode
 }
@@ -141,21 +68,5 @@ void System::setupPins()
     digitalWrite(PinMap::LED_GREEN, HIGH);
 }
 
-void System::loadConfig()
-{
-    DynamicJsonDocument configDoc(16384); //allocate 16kb for config doc MAXSIZE
-    DeserializationError jsonError;
 
-    try
-    {
-        sensors.setup(configDoc.as<JsonObjectConst>()["Sensors"]);
 
-    }
-    catch (const std::exception &e)
-    {
-         RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Exception occured while loading flight config! - " + std::string(e.what()));
-
-         throw e; //continue throwing as we dont want to continue
-    }
-   
-}

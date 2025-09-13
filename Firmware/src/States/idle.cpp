@@ -26,12 +26,6 @@ void Idle::initialize()
 
 Types::CoreTypes::State_ptr_t Idle::update()
 {
-    // if (millis()-prevLogMessageTime > 1000)
-    // {
-    //     RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Idle heartbeat!");
-    //     prevLogMessageTime = millis();
-    // }
-
     return nullptr;
 };
 

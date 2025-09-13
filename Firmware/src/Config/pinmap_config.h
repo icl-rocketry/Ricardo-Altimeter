@@ -10,11 +10,13 @@ namespace PinMap{
     static constexpr int LED_BLUE = 2;
     static constexpr int LED_GREEN = 4;
 
+    // for flash ic (using standard spi mode)
     static constexpr int IC_SCLK = 9; // 120Mhz
     static constexpr int IC_MOSI = 10; // SIO0 for quad spi
-    static constexpr int IC_WP = 11; // SIO2 for quad spi
     static constexpr int IC_MISO = 12; // SIO1 for quad spi
     static constexpr int IC_Cs = 13;
+    
+    static constexpr int IC_WP = 11; // SIO2 for quad spi
     static constexpr int IC_Hold = 14; // SIO3 for quad spi
 
 
@@ -34,12 +36,4 @@ namespace PinMap{
 
     static constexpr int BattVolt = 8;
 
-
-
-
-
-
 }
-
-
-

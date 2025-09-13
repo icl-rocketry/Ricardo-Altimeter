@@ -1,31 +1,22 @@
 #pragma once
 
+#include <SPI.h>
+
+
 #include <libriccore/riccoresystem.h>
 
-#include <string_view>
-#include <array>
 
-//config includes
 #include "Config/systemflags_config.h"
 #include "Config/commands_config.h"
 #include "Config/pinmap_config.h"
-#include "Config/types.h"
-
-#include <SPI.h>
-#include <Wire.h>
-
+#include "Config/general_config.h"
 
 #include "Commands/commands.h"
 
+#include "States/idle.h"
 
-#include "Sensors/sensors.h"
-#include "Sensors/estimator.h"
-
-#include "Sound/tunezHandler.h"
-
-#include <librnp/rnp_networkmanager.h>
-#include "Storage/nand_flash.h"
-#include "Storage/data_logger.h"
+#include "Storage/nand_flash.hpp"
+#include "Storage/file_system.hpp"
 
 class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 {
@@ -37,35 +28,15 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 
         void systemUpdate();
 
-        //board communication
-        SPIClass vspi;
-        SPIClass hspi;
-
-
-        Sensors sensors;
-        Estimator estimator;
-
-        TunezHandler tunezhandler;
-
-
-        NAND_Flash nand_flash;
-        Data_Logger data_logger;
-
-        uint8_t* data_ptr;
-
     private:
 
         void setupSPI();
         void setupPins();
-        void loadConfig();
 
+        SPIClass vspi;
+        SPIClass hspi;
 
-        uint32_t telemetry_log_delta = 5000; //200hz
-        uint32_t prev_telemetry_log_time;
-
-       
-        uint32_t prevTime;
-        
-
+        NANDFlash nandflash;
+        FileSystem filesystem;
 
 };
