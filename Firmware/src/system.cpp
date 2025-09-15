@@ -1,17 +1,17 @@
 #include "system.h"
-extern "C" {
-    #include "ff.h"
-}
+
 System::System():
     RicCoreSystem(Commands::command_map,Commands::defaultEnabledCommands,Serial),
     vspi(0),
     hspi(1),
+    sensors(hspi, systemstatus),
+    estimator(systemstatus),
     nandflash(vspi, PinMap::IC_Cs, PinMap::IC_WP, PinMap::IC_Hold),
     filesystem(nandflash)
 
 {};
 
-void System::systemSetup(){
+void System::systemSetup() {
     
     Serial.setRxBufferSize(GeneralConfig::SerialRxSize);
     Serial.begin(GeneralConfig::SerialBaud);
@@ -19,16 +19,28 @@ void System::systemSetup(){
     setupSPI();
     setupPins();
 
+    estimator.setup();
+
     statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
 
-    delay(3000); //wait for printing purposes
+    delay(3000); //wait forem filesystem; printing purposes
 
-    Serial.println(filesystem.setup() ? "Filesystem mounted" : "Filesystem mount failed");
-
+    // Serial.println(filesystem.setup() ? "Filesystem mounted" : "Filesystem mount failed");
+    // filesystem.print_disk_space();
      
 };
-
+// #include <librnp/rnp_packet.h>
+// #include "test.h"
 void System::systemUpdate(){
+
+    sensors.update();
+    estimator.update(sensors.getData());
+
+    // MessagePacket_Base<0,0> msg("hello");
+    // dumpTx(msg);  // prints the serialized header+body bytes
+
+    // RnpPacketSerialized rx(bytes_from_uart);
+    // dumpRx(rx); 
 
 };
 

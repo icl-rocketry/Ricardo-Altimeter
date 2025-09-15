@@ -12,6 +12,7 @@ class FileSystem {
         FileSystem(NANDFlash &nandflash);
 
         bool setup(bool mkfs_if_needed = true);
+        void format_flash();
         void print_disk_space();
         void print_files(const char *start = "0:/");
 

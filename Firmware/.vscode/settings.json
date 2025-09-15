@@ -6,7 +6,8 @@
         "file_system.hpp": "c",
         "nand_flash.hpp": "c",
         "diskio_dhara.hpp": "c",
-        "translatedflash_ctx.hpp": "c"
+        "translatedflash_ctx.hpp": "c",
+        "regex": "cpp"
     },
     "idf.port": "/dev/cu.usbserial-120",
     "idf.openOcdConfigs": [

@@ -13,6 +13,9 @@
 
 #include "Commands/commands.h"
 
+#include "Sensors/sensors.h"
+#include "Sensors/estimator.h"
+
 #include "States/idle.h"
 
 #include "Storage/nand_flash.hpp"
@@ -28,13 +31,17 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 
         void systemUpdate();
 
+        SPIClass vspi;
+        SPIClass hspi;
+        
+        Sensors sensors;
+        Estimator estimator;
+
     private:
 
         void setupSPI();
         void setupPins();
 
-        SPIClass vspi;
-        SPIClass hspi;
 
         NANDFlash nandflash;
         FileSystem filesystem;

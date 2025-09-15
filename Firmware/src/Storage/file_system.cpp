@@ -57,6 +57,42 @@ bool FileSystem::setup(bool mkfs_if_needed)
     return true;
 }
 
+void FileSystem::format_flash() {
+    auto result = nandflash_.setup();
+    if (result != NANDFlash::Error::SUCCESS) {
+        Serial.println("NAND Flash Setup Failed " + String(static_cast<uint8_t>(result)));
+    } else {
+        Serial.println("NAND Flash Setup Success");
+    }
+
+    tf_.init(nandflash_, /*log2_page_size*/11, /*log2_ppb*/6, /*num_blocks*/4096);
+
+    dhara_map_init(&map_, &tf_.dn, dhara_page_buf_, /*gc_ratio=*/1);
+
+    const size_t PSZ = 1u << tf_.dn.log2_page_size;   // 2048
+    static uint8_t page[1 << 11];                     // 2 KiB
+    memset(page, 0, PSZ);
+
+    dhara_error_t e = DHARA_E_NONE;
+
+    if (dhara_map_resume(&map_, &e) == 0) {
+        Serial.println("Dhara resume OK");
+    } else {
+        Serial.printf("Resume failed (%d). Formatting via write+sync…\n", (int)e);
+
+        if (dhara_map_write(&map_, /*lba*/0, page, &e) < 0) {
+            Serial.printf("format write failed: %d\n", (int)e);
+        } else if (dhara_map_sync(&map_, &e) < 0) {
+            Serial.printf("format sync failed: %d\n", (int)e);
+        } else {
+            if (dhara_map_resume(&map_, &e) == 0)
+            Serial.println("Resume OK after write+sync");
+            else
+            Serial.printf("Resume still failed: %d\n", (int)e);
+        }
+    }
+}
+
 void FileSystem::print_disk_space() {
     DWORD fre_clust = 0;
     FATFS* ignore = nullptr;               // required by API but we won't use it
