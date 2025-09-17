@@ -22,13 +22,13 @@ namespace Commands
     };
 
     inline std::initializer_list<ID> defaultEnabledCommands = {
-        ID::Telemetry,
-        ID::Free_Ram
+        ID::Free_Ram,
+        ID::Telemetry
     };
 
     inline std::unordered_map<ID, std::function<void(ForwardDecl_SystemClass &, const RnpPacketSerialized &)>> command_map{
-        {ID::Telemetry, TelemetryCommand},
-        {ID::Free_Ram, FreeRamCommand}
+        {ID::Free_Ram, FreeRamCommand},
+        {ID::Telemetry, TelemetryCommand}
     };
 
 

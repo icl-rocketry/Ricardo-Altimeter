@@ -22,7 +22,7 @@
 #include "icm_20608.h"
 #include "h3lis331dl.h"
 #include "mmc5983ma.h"
-#include "vrailmonitor.h"
+#include "adc_vrailmonitor.h"
 
 class Sensors
 {
@@ -53,6 +53,6 @@ private:
     ICM_20608 accelgyro;
     H3LIS331DL accel;
     MMC5983MA mag;
-    VRailMonitor logicrail;
+    ADC_VRailMonitor logicrail;
 
 };

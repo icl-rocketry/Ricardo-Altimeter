@@ -41,6 +41,7 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 
         void setupSPI();
         void setupPins();
+        void loadConfig();
 
 
         NANDFlash nandflash;

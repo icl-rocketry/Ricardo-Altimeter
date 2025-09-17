@@ -197,13 +197,17 @@ void FileSystem::list_dir_recursive(const char *path, int depth,
 }
 
 bool FileSystem::format(uint16_t /*au_kb*/) {
-    // Let FatFs auto-select a valid cluster size for the reported capacity
-    DWORD au_bytes = 0;                  // 0 = auto (must be in BYTES for this API)
-    BYTE  opt      = FM_FAT | FM_FAT32;  // allow FAT or FAT32; omit FM_EXFAT unless enabled in ffconf.h
+    // Work buffer: at least FF_MAX_SS bytes
+    static uint8_t work[FF_MAX_SS];
 
-    static uint8_t work[FF_MAX_SS];      // must be >= FF_MAX_SS
+    MKFS_PARM mk = {};
+    mk.fmt     = FM_FAT | FM_FAT32;  // allow FAT or FAT32
+    mk.n_fat   = 1;                  // 1 or 2 (1 is fine)
+    mk.align   = 0;                  // auto (use disk's erase block via disk_ioctl)
+    mk.n_root  = 0;                  // default (ignored on FAT32)
+    mk.au_size = 0;                  // 0 = auto, in BYTES (per R0.14 API)
 
-    FRESULT fr = f_mkfs("0:", opt, au_bytes, work, sizeof(work));
+    FRESULT fr = f_mkfs("0:", &mk, work, sizeof(work));
     if (fr != FR_OK) {
         Serial.printf("f_mkfs failed (%d)\n", (int)fr);
         return false;

@@ -19,14 +19,16 @@ void System::systemSetup() {
     setupSPI();
     setupPins();
 
+    loadConfig();
     estimator.setup();
 
     statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
 
     delay(3000); //wait forem filesystem; printing purposes
 
-    // Serial.println(filesystem.setup() ? "Filesystem mounted" : "Filesystem mount failed");
-    // filesystem.print_disk_space();
+    Serial.println(filesystem.setup() ? "Filesystem mounted" : "Filesystem mount failed");
+    filesystem.print_disk_space();
+    filesystem.print_files();
      
 };
 // #include <librnp/rnp_packet.h>
@@ -80,5 +82,22 @@ void System::setupPins()
     digitalWrite(PinMap::LED_GREEN, HIGH);
 }
 
+void System::loadConfig()
+{
+    DynamicJsonDocument configDoc(16384); //allocate 16kb for config doc MAXSIZE
+    DeserializationError jsonError;
 
+    try
+    {
+        sensors.setup(configDoc.as<JsonObjectConst>()["Sensors"]);
+
+    }
+    catch (const std::exception &e)
+    {
+         RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Exception occured while loading flight config! - " + std::string(e.what()));
+
+         throw e; //continue throwing as we dont want to continue
+    }
+   
+}
 

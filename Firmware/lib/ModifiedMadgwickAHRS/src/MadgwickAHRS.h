@@ -20,7 +20,7 @@
 #include <Eigen/Core>
 #include <Eigen/Eigen>
 #include <Eigen/Geometry>
-
+#include <cstring>
 
 class Madgwick{
 private:
@@ -30,7 +30,7 @@ private:
     float q0;
     float q1;
     float q2;
-    float q3;	// quaternion of sensor frame relative to auxiliary frame
+    float q3;	// quaternion of sensor frame relative to auxiliary frame -> is this not q^{s}_{e} -> which is the oreintaiton of hte earth frame relative t osensor frame?
 
     float invSampleFreq; // time step of gyro samples
     //euler angles in degrees

@@ -47,12 +47,6 @@ void Estimator::update(const SensorStructs::raw_measurements_t &raw_sensors)
       // transform angular rates from body frame to earth frame
       updateAngularRates(raw_sensors.accelgyro.gx, raw_sensors.accelgyro.gy, raw_sensors.accelgyro.gz);
       localizationkf.accelUpdate(getLinearAcceleration(raw_sensors.accelgyro.ax, raw_sensors.accelgyro.ay, raw_sensors.accelgyro.az) * g);
-      
-      if (!_homeSet)
-      {
-         Serial.println("Home not set, Localization not avaliable");
-         return;
-      }
 
       localizationkf.baroUpdate(raw_sensors.baro.alt - state.baro_ref_alt);
 

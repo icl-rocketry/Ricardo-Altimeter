@@ -40,7 +40,7 @@ namespace SensorStructs
         float press;
     };
     
-    struct V_RAIL_t{
+    struct ADC_V_RAIL_t{
         /**
          * @brief Voltage in mV
          * 
@@ -60,7 +60,7 @@ namespace SensorStructs
         ACCEL_3AXIS_t accel;
         MAG_3AXIS_t mag;
         BARO_t baro;
-        V_RAIL_t logicrail;
+        ADC_V_RAIL_t logicrail;
 
         uint64_t system_time;
     };
