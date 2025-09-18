@@ -1,0 +1,16 @@
+{
+    "idf.adapterTargetName": "esp32s3",
+    "files.associations": {
+        "*.ipp": "cpp",
+        "core": "cpp",
+        "file_system.hpp": "c",
+        "nand_flash.hpp": "c",
+        "diskio_dhara.hpp": "c",
+        "translatedflash_ctx.hpp": "c",
+        "regex": "cpp"
+    },
+    "idf.port": "/dev/cu.usbserial-120",
+    "idf.openOcdConfigs": [
+        "board/esp32s3-builtin.cfg"
+    ]
+}
