@@ -19,8 +19,8 @@ void System::systemSetup() {
     setupSPI();
     setupPins();
 
-    loadConfig();
-    estimator.setup();
+    // loadConfig();
+    // estimator.setup();
 
     statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
 
@@ -31,18 +31,11 @@ void System::systemSetup() {
     filesystem.print_files();
      
 };
-// #include <librnp/rnp_packet.h>
-// #include "test.h"
+
 void System::systemUpdate(){
 
-    sensors.update();
-    estimator.update(sensors.getData());
-
-    // MessagePacket_Base<0,0> msg("hello");
-    // dumpTx(msg);  // prints the serialized header+body bytes
-
-    // RnpPacketSerialized rx(bytes_from_uart);
-    // dumpRx(rx); 
+    // sensors.update();
+    // estimator.update(sensors.getData()); 
 
 };
 
