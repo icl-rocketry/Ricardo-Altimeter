@@ -13,9 +13,6 @@ System::System():
 
 void System::systemSetup() {
     
-    Serial.setRxBufferSize(GeneralConfig::SerialRxSize);
-    Serial.begin(GeneralConfig::SerialBaud);
-
     setupSPI();
     setupPins();
 
@@ -23,26 +20,21 @@ void System::systemSetup() {
     estimator.setup();
 
     statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
+    // statemachine.initalize(std::make_unique<Startup>(systemstatus,commandhandler));
 
     delay(3000); //wait forem filesystem; printing purposes
 
-    Serial.println(filesystem.setup() ? "Filesystem mounted" : "Filesystem mount failed");
+    ESP_LOGI("System","Setting up filesystem...");
+    ESP_LOGI("System","Filesystem setup %s", filesystem.setup() ? "succeeded" : "failed");
     filesystem.print_disk_space();
     filesystem.print_files();
-     
+
 };
-// #include <librnp/rnp_packet.h>
-// #include "test.h"
+
 void System::systemUpdate(){
 
     sensors.update();
     estimator.update(sensors.getData());
-
-    // MessagePacket_Base<0,0> msg("hello");
-    // dumpTx(msg);  // prints the serialized header+body bytes
-
-    // RnpPacketSerialized rx(bytes_from_uart);
-    // dumpRx(rx); 
 
 };
 

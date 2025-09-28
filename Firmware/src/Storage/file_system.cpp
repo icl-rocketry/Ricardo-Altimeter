@@ -16,10 +16,10 @@ bool FileSystem::setup(bool mkfs_if_needed)
     auto result = nandflash_.setup();
     if (result != NANDFlash::Error::SUCCESS)
     {
-        Serial.println(String("NAND Flash Setup Failed ") + String((int)result));
+        ESP_LOGI(TAG, "NAND Flash Setup Failed %d", (int)result);
         return false;
     }
-    Serial.println("NAND Flash Setup Success");
+    ESP_LOGI(TAG, "NAND Flash Setup Success");
 
     tf_.init(nandflash_, /*log2_page_size*/ 11, /*log2_ppb*/ 6, /*num_blocks*/ 4096);
     dhara_map_init(&map_, &tf_.dn, dhara_page_buf_, /*gc_ratio=*/1);
@@ -27,11 +27,11 @@ bool FileSystem::setup(bool mkfs_if_needed)
     dhara_error_t e = DHARA_E_NONE;
     if (dhara_map_resume(&map_, &e) == 0)
     {
-        Serial.println("Dhara resume OK");
+        ESP_LOGI(TAG, "Dhara resume OK");
     }
     else
     {
-        Serial.printf("Dhara resume failed (%d).\n", (int)e);
+        ESP_LOGI(TAG, "Dhara resume failed (%d).\n", (int)e);
     }
 
     // Register our disk I/O driver BEFORE f_mount
@@ -39,17 +39,17 @@ bool FileSystem::setup(bool mkfs_if_needed)
 
     // Mount using the same drive number
     FRESULT fr = f_mount(&fs_, "0:", 1);
-    Serial.printf("f_mount returned %d\n", (int)fr);
+    ESP_LOGI(TAG, "f_mount returned %d", (int)fr);
     if (fr == FR_NO_FILESYSTEM && mkfs_if_needed)
     {
-        Serial.println("No filesystem found — creating FAT...");
+        ESP_LOGI(TAG, "No filesystem found — creating FAT...");
         if (!format(/*au_kb=*/16))
             return false;
         fr = f_mount(&fs_, "0:", 1);
     }
     if (fr != FR_OK)
     {
-        Serial.printf("f_mount failed (%d)\n", (int)fr);
+        ESP_LOGI(TAG, "f_mount failed (%d)", (int)fr);
         file_system_unregister_diskio(kDrv);
         return false;
     }
@@ -60,9 +60,9 @@ bool FileSystem::setup(bool mkfs_if_needed)
 void FileSystem::format_flash() {
     auto result = nandflash_.setup();
     if (result != NANDFlash::Error::SUCCESS) {
-        Serial.println("NAND Flash Setup Failed " + String(static_cast<uint8_t>(result)));
+        ESP_LOGI(TAG, "NAND Flash Setup Failed %u", static_cast<uint8_t>(result));
     } else {
-        Serial.println("NAND Flash Setup Success");
+        ESP_LOGI(TAG, "NAND Flash Setup Success");
     }
 
     tf_.init(nandflash_, /*log2_page_size*/11, /*log2_ppb*/6, /*num_blocks*/4096);
@@ -76,19 +76,19 @@ void FileSystem::format_flash() {
     dhara_error_t e = DHARA_E_NONE;
 
     if (dhara_map_resume(&map_, &e) == 0) {
-        Serial.println("Dhara resume OK");
+        ESP_LOGI(TAG, "Dhara resume OK");
     } else {
-        Serial.printf("Resume failed (%d). Formatting via write+sync…\n", (int)e);
+        ESP_LOGI(TAG, "Resume failed (%d). Formatting via write+sync…", (int)e);
 
         if (dhara_map_write(&map_, /*lba*/0, page, &e) < 0) {
-            Serial.printf("format write failed: %d\n", (int)e);
+            ESP_LOGI(TAG, "format write failed: %d", (int)e);
         } else if (dhara_map_sync(&map_, &e) < 0) {
-            Serial.printf("format sync failed: %d\n", (int)e);
+            ESP_LOGI(TAG, "format sync failed: %d", (int)e);
         } else {
             if (dhara_map_resume(&map_, &e) == 0)
-            Serial.println("Resume OK after write+sync");
+                ESP_LOGI(TAG, "Resume OK after write+sync");
             else
-            Serial.printf("Resume still failed: %d\n", (int)e);
+                ESP_LOGI(TAG, "Resume still failed: %d", (int)e);
         }
     }
 }
@@ -98,14 +98,14 @@ void FileSystem::print_disk_space() {
     FATFS* ignore = nullptr;               // required by API but we won't use it
 
     FRESULT fr = f_getfree("0:", &fre_clust, &ignore);
-    Serial.printf("f_getfree -> FR=%d\n", (int)fr);
+    ESP_LOGI(TAG, "f_getfree -> FR=%d", (int)fr);
     if (fr != FR_OK) return;
 
     const uint64_t cluster_bytes = (uint64_t)fs_.csize * 512ULL;
     const uint64_t total  = (uint64_t)(fs_.n_fatent - 2) * cluster_bytes;
     const uint64_t free_b = (uint64_t)fre_clust          * cluster_bytes;
 
-    Serial.printf("FAT total=%llu bytes, free=%llu bytes\n",
+    ESP_LOGI(TAG, "FAT total=%llu bytes, free=%llu bytes",
                     (unsigned long long)total,
                     (unsigned long long)free_b);
 }
@@ -113,7 +113,7 @@ void FileSystem::print_disk_space() {
 void FileSystem::print_files(const char *start)
 {
     if (!mounted_) {
-        Serial.println("Filesystem not mounted");
+        ESP_LOGI(TAG, "Filesystem not mounted");
         return;
     }
 
@@ -123,10 +123,10 @@ void FileSystem::print_files(const char *start)
     uint32_t files = 0, dirs = 0;
     uint64_t bytes = 0;
 
-    Serial.printf("Listing files under '%s'\n", root);
+    ESP_LOGI(TAG, "Listing files under '%s'", root);
     list_dir_recursive(root, 0, files, dirs, bytes);
 
-    Serial.printf("\nSummary: %lu files, %lu dirs, %llu bytes total\n",
+    ESP_LOGI(TAG, "Summary: %lu files, %lu dirs, %llu bytes total",
                   (unsigned long)files, (unsigned long)dirs,
                   (unsigned long long)bytes);
 }
@@ -139,14 +139,16 @@ void FileSystem::list_dir_recursive(const char *path, int depth,
 
     FRESULT fr = f_opendir(&dir, path);
     if (fr != FR_OK) {
-        Serial.printf("f_opendir('%s') -> %d\n", path, (int)fr);
+        ESP_LOGI(TAG, "f_opendir('%s') -> %d", path, (int)fr);
         return;
     }
+
+    char indent[128];
 
     for (;;) {
         fr = f_readdir(&dir, &fno);
         if (fr != FR_OK) {
-            Serial.printf("f_readdir('%s') -> %d\n", path, (int)fr);
+            ESP_LOGI(TAG, "f_readdir('%s') -> %d", path, (int)fr);
             break;
         }
         if (fno.fname[0] == '\0') {
@@ -155,13 +157,11 @@ void FileSystem::list_dir_recursive(const char *path, int depth,
         }
 
         const char *name = fno.fname;
-        
-        // Indent
-        for (int i = 0; i < depth; ++i) Serial.print("  ");
+        make_indent(depth, indent, sizeof(indent));
 
         if (fno.fattrib & AM_DIR) {
             dirs++;
-            Serial.printf("[DIR] %s\n", name);
+            ESP_LOGI(TAG, "%s[DIR] %s", indent, name);
 
             char next[256];
             bool has_slash = (path[0] && path[strlen(path) - 1] == '/');
@@ -169,8 +169,9 @@ void FileSystem::list_dir_recursive(const char *path, int depth,
             if (n > 0 && (size_t)n < sizeof(next)) {
                 list_dir_recursive(next, depth + 1, files, dirs, bytes);
             } else {
-                for (int i = 0; i < depth + 1; ++i) Serial.print("  ");
-                Serial.println("** path too long, skipping **");
+                char indent2[128];
+                make_indent(depth + 1, indent2, sizeof(indent2));
+                ESP_LOGI(TAG, "%s** path too long, skipping **", indent2);
             }
         } else {
             files++;
@@ -185,11 +186,12 @@ void FileSystem::list_dir_recursive(const char *path, int depth,
             uint8_t  min   = (t >> 5) & 0x3F;
             uint8_t  sec   = (t & 0x1F) * 2;
 
-            Serial.printf("%s  %10lu  %04u-%02u-%02u %02u:%02u:%02u\n",
-                          name,
-                          (unsigned long)fno.fsize,
-                          (unsigned)year, (unsigned)month, (unsigned)day,
-                          (unsigned)hour, (unsigned)min, (unsigned)sec);
+            ESP_LOGI(TAG, "%s%s  %10lu  %04u-%02u-%02u %02u:%02u:%02u",
+                     indent,
+                     name,
+                     (unsigned long)fno.fsize,
+                     (unsigned)year, (unsigned)month, (unsigned)day,
+                     (unsigned)hour, (unsigned)min, (unsigned)sec);
         }
     }
 
@@ -209,7 +211,7 @@ bool FileSystem::format(uint16_t /*au_kb*/) {
 
     FRESULT fr = f_mkfs("0:", &mk, work, sizeof(work));
     if (fr != FR_OK) {
-        Serial.printf("f_mkfs failed (%d)\n", (int)fr);
+        ESP_LOGI(TAG, "f_mkfs failed (%d)", (int)fr);
         return false;
     }
     return true;
@@ -263,14 +265,19 @@ bool FileSystem::flush_cache_if_dirty()
     dhara_error_t e = DHARA_E_NONE;
     if (dhara_map_write(&map_, cache_lpage_, page_cache_, &e) < 0)
     {
-        Serial.printf("dhara_map_write fail (page %lu, err %d)\n", (unsigned long)cache_lpage_, (int)e);
+        ESP_LOGI(TAG, "dhara_map_write fail (page %lu, err %d)", (unsigned long)cache_lpage_, (int)e);
         return false;
     }
     cache_dirty_ = false;
     return true;
 }
 
-
+void FileSystem::make_indent(int depth, char* out, size_t out_sz) {
+    size_t n = (size_t)depth * 2;
+    if (n >= out_sz) n = out_sz - 1;
+    for (size_t i = 0; i < n; ++i) out[i] = ' ';
+    out[n] = '\0';
+}
 
 
 

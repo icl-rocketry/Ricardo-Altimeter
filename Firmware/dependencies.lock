@@ -90,11 +90,17 @@ dependencies:
       type: service
     version: 1.2.0
   espressif/esp_secure_cert_mgr:
-    component_hash: 421cb5608b9c06c3747be15edde72d67f7f5c899dbabbcd836742df9af0e9134
+    component_hash: 47589860736b456608035b06d88e6a5dab566419fa8737a76a4f33c611ec539b
     source:
       service_url: https://api.components.espressif.com/
       type: service
-    version: 2.6.1
+    version: 2.7.0
+  espressif/esp_tinyusb:
+    component_hash: 18cfcc83bc28b66f008007843a995a6b78d3293ac7befedc93371605e212a06b
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 2.0.0
   espressif/jsmn:
     component_hash: d80350c41bbaa827c98a25b6072df00884e72f54885996fab4a4f0aebce6b6c3
     source:
@@ -143,6 +149,12 @@ dependencies:
       service_url: https://api.components.espressif.com/
       type: service
     version: 1.4.6
+  espressif/tinyusb:
+    component_hash: aa65639878f27a44d349044afd9c3fc134a92bd560874fdac1d836019b5c07ca
+    source:
+      service_url: https://api.components.espressif.com/
+      type: service
+    version: 0.18.0~4
   idf:
     component_hash: null
     source:
@@ -154,6 +166,6 @@ dependencies:
       service_url: https://api.components.espressif.com/
       type: service
     version: 1.20.1
-manifest_hash: 11ced7fe65e7816c83c963f6e2f7a9a7b57b33cdf80903e34d7e8f843c480dea
+manifest_hash: 56a11650aa50daaf2e0ad986ce823292cb5df8df6db4aabdf35c3bc763b43214
 target: esp32s3
 version: 1.0.0

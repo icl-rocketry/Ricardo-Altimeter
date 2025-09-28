@@ -99,3 +99,8 @@ void Commands::FreeRamCommand(System& sm, const RnpPacketSerialized& packet)
 	}
 	
 }
+
+// void Commands::EnterMSCCommand(System& system, const RnpPacketSerialized& packet) 
+// {
+// 	system.statemachine.changeState(std::make_unique<MSC>(system));
+// }

@@ -17,9 +17,12 @@
 #include "Sensors/estimator.h"
 
 #include "States/idle.h"
+#include "States/startup.h"
 
 #include "Storage/nand_flash.hpp"
 #include "Storage/file_system.hpp"
+
+#include "esp_log.h"
 
 class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 {

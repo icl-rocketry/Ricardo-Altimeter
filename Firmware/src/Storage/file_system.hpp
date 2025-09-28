@@ -6,6 +6,7 @@
 #include "nand_flash.hpp"
 #include "translatedflash_ctx.hpp"
 #include "diskio_dhara.hpp"
+#include "esp_log.h"
 
 class FileSystem {
     public:
@@ -49,5 +50,7 @@ class FileSystem {
         void unmount();
         void list_dir_recursive(const char *path, int depth,
                             uint32_t &files, uint32_t &dirs, uint64_t &bytes);
+        void make_indent(int depth, char* out, size_t out_sz);
+        const char *TAG = "FS";
 
     };

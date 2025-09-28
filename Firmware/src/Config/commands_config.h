@@ -18,17 +18,20 @@ namespace Commands
     {
         NoCommand = 0,
         Telemetry = 8,
+        Enter_MSC = 10,
         Free_Ram = 250
     };
 
     inline std::initializer_list<ID> defaultEnabledCommands = {
         ID::Free_Ram,
-        ID::Telemetry
+        ID::Telemetry,
+        ID::Enter_MSC
     };
 
     inline std::unordered_map<ID, std::function<void(ForwardDecl_SystemClass &, const RnpPacketSerialized &)>> command_map{
         {ID::Free_Ram, FreeRamCommand},
         {ID::Telemetry, TelemetryCommand}
+        // {ID::Enter_MSC, EnterMSCCommand}
     };
 
 
