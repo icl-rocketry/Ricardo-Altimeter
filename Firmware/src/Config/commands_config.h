@@ -30,8 +30,8 @@ namespace Commands
 
     inline std::unordered_map<ID, std::function<void(ForwardDecl_SystemClass &, const RnpPacketSerialized &)>> command_map{
         {ID::Free_Ram, FreeRamCommand},
-        {ID::Telemetry, TelemetryCommand}
-        // {ID::Enter_MSC, EnterMSCCommand}
+        {ID::Telemetry, TelemetryCommand},
+        {ID::Enter_MSC, EnterMSCCommand}
     };
 
 

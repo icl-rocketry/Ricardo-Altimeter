@@ -1,6 +1,7 @@
 #include "commands.h"
 
 #include "system.h"
+#include "States/msc.h"
 
 void Commands::TelemetryCommand(System& system, const RnpPacketSerialized& packet) 
 {
@@ -100,7 +101,7 @@ void Commands::FreeRamCommand(System& sm, const RnpPacketSerialized& packet)
 	
 }
 
-// void Commands::EnterMSCCommand(System& system, const RnpPacketSerialized& packet) 
-// {
-// 	system.statemachine.changeState(std::make_unique<MSC>(system));
-// }
+void Commands::EnterMSCCommand(System& system, const RnpPacketSerialized& packet) 
+{
+	system.statemachine.changeState(std::make_unique<MSC>(system.systemstatus,system.commandhandler));
+}

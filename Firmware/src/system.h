@@ -16,7 +16,6 @@
 #include "Sensors/sensors.h"
 #include "Sensors/estimator.h"
 
-#include "States/idle.h"
 #include "States/startup.h"
 
 #include "Storage/nand_flash.hpp"

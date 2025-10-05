@@ -19,8 +19,7 @@ void System::systemSetup() {
     loadConfig();
     estimator.setup();
 
-    statemachine.initalize(std::make_unique<Idle>(systemstatus,commandhandler));
-    // statemachine.initalize(std::make_unique<Startup>(systemstatus,commandhandler));
+    statemachine.initalize(std::make_unique<Startup>(systemstatus,commandhandler));
 
     delay(3000); //wait forem filesystem; printing purposes
 
