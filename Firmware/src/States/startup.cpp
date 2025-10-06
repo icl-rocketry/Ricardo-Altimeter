@@ -35,8 +35,9 @@ Types::CoreTypes::State_ptr_t Startup::update()
     counter++;
 
     if(counter>=10){
-        ESP_LOGI("Startup", "Switching to MSC state");
-        return std::make_unique<MSC>(_system);
+        // ESP_LOGI("Startup", "Switching to Logging state");
+        // return std::make_unique<MSC>(_system);
+        // return std::make_unique<Record>(_system);
     }
     return nullptr;
 };

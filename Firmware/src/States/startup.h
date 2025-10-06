@@ -10,6 +10,7 @@
 #include "Config/systemflags_config.h"
 #include "Config/types.h"
 #include "States/msc.h"
+#include "States/record.h"
 
 class Startup : public Types::CoreTypes::State_t
 {

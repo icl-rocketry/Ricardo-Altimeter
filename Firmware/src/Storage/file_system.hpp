@@ -13,6 +13,10 @@ class FileSystem {
         FileSystem(NANDFlash &nandflash);
 
         bool setup(bool mkfs_if_needed = true);
+
+        bool write_file(const char* path, const void* data, size_t len, bool append);
+        bool append_line(const char* path, const char* line);
+        
         void format_flash();
         void print_disk_space();
         void print_files(const char *start = "0:/");

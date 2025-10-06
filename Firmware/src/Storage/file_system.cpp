@@ -57,6 +57,37 @@ bool FileSystem::setup(bool mkfs_if_needed)
     return true;
 }
 
+bool FileSystem::write_file(const char* path, const void* data, size_t len, bool append)
+{
+    if (!mounted_) return false;              // not mounted
+    // If you keep a flag like `usb_owned_` after handover_to_usb(), guard here:
+    // if (usb_owned_) return false;
+
+    FIL f;
+    BYTE mode = FA_WRITE | FA_OPEN_ALWAYS;    // create if missing
+    FRESULT fr = f_open(&f, path, mode);
+    if (fr != FR_OK) return false;
+
+    if (append) {
+        fr = f_lseek(&f, f_size(&f));
+        if (fr != FR_OK) { f_close(&f); return false; }
+    } else {
+        // If you want "truncate" semantics instead of OPEN_ALWAYS:
+        // f_close(&f); return f_open(&f, path, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK;
+    }
+
+    UINT w = 0;
+    fr = f_write(&f, data, (UINT)len, &w);
+    if (fr == FR_OK) f_sync(&f);
+    f_close(&f);
+    return (fr == FR_OK && w == len);
+}
+
+bool FileSystem::append_line(const char* path, const char* line)
+{
+    return write_file(path, line, std::strlen(line), /*append=*/true);
+}
+
 void FileSystem::format_flash() {
     auto result = nandflash_.setup();
     if (result != NANDFlash::Error::SUCCESS) {

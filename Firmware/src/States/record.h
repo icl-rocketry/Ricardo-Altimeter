@@ -9,7 +9,7 @@
 #include "Config/pinmap_config.h"
 #include "Config/systemflags_config.h"
 #include "Config/types.h"
-#include "States/msc.h"
+#include "Sensors/logger.h"
 
 class Record : public Types::CoreTypes::State_t
 {
@@ -24,5 +24,5 @@ class Record : public Types::CoreTypes::State_t
 
     private:
         System& _system;
-        uint32_t counter;
+        Logger logger;
 };
