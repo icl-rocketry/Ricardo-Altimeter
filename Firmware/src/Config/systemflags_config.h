@@ -6,7 +6,8 @@
 enum class SYSTEM_FLAG:uint32_t{
     //state flags
     STATE_STARTUP = (1 << 0),
-    STATE_MSC = (1 << 1),
+    STATE_RECORD = (1 << 1),
+    STATE_MSC = (1 << 2),
     //flags
     DEBUG = (1 << 7),
     //critical messages 

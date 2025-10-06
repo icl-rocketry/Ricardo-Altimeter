@@ -11,10 +11,10 @@
 #include "Config/types.h"
 #include "States/msc.h"
 
-class Startup : public Types::CoreTypes::State_t
+class Record : public Types::CoreTypes::State_t
 {
     public:
-        Startup(System& system);
+        Record(System& system);
 
         void initialize() override;
 

@@ -16,11 +16,12 @@
 #include "esp_log.h"
 #include "tinyusb_cdc_acm.h"
 #include "tinyusb_console.h"   // esp_tusb_init_console()
+#include "Storage/msc_nand_glue.h" // msc_nand_attach()
 
 class MSC : public Types::CoreTypes::State_t
 {
     public:
-        MSC(Types::CoreTypes::SystemStatus_t& systemtatus, Types::CoreTypes::CommandHandler_t& commandhandler);
+        MSC(System& system);
 
         void initialize() override;
 
@@ -29,8 +30,7 @@ class MSC : public Types::CoreTypes::State_t
         void exit() override;
 
     private:
-        Types::CoreTypes::CommandHandler_t& _commandhandler;
-        uint32_t prevLogMessageTime;
+        System& _system;
 
 };
 

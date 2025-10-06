@@ -39,6 +39,8 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
         Sensors sensors;
         Estimator estimator;
 
+        NANDFlash nandflash;
+        FileSystem filesystem;
     private:
 
         void setupSPI();
@@ -46,7 +48,5 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
         void loadConfig();
 
 
-        NANDFlash nandflash;
-        FileSystem filesystem;
 
 };
