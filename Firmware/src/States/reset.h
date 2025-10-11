@@ -9,12 +9,13 @@
 #include "Config/pinmap_config.h"
 #include "Config/systemflags_config.h"
 #include "Config/types.h"
-#include "Sensors/logger.h"
 
-class Record : public Types::CoreTypes::State_t
+#include "States/msc.h"
+
+class Reset : public Types::CoreTypes::State_t
 {
     public:
-        Record(System& system);
+        Reset(System& system);
 
         void initialize() override;
 
@@ -24,7 +25,4 @@ class Record : public Types::CoreTypes::State_t
 
     private:
         System& _system;
-        Logger logger;
-        std::string file_name;
-        int counter;
 };

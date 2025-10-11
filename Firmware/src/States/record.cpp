@@ -25,18 +25,27 @@ void Record::initialize()
     digitalWrite(PinMap::LED_RED, HIGH);
     digitalWrite(PinMap::LED_BLUE, LOW);
     digitalWrite(PinMap::LED_GREEN, HIGH);
-    logger.esplogData(_system);
+
     delay(1000); //wait a second to ensure logger output is seen before writing to FS
-    // _system.filesystem.write_file("0:/test_0.txt", "Recording started\n", strlen("Recording started\n"), false); // worked successfully
-    std::string line = logger.makeLogLine(_system);
-    line += "\n";
-    _system.filesystem.append_line("0:/test_0.txt", line.c_str());
+
+    int current_number_of_files = _system.filesystem.getNumberOfFiles();
+    file_name = "0:/LOG";
+    if (current_number_of_files < 10) {
+        file_name += "0" + std::to_string(current_number_of_files) + ".txt";
+    } else {
+        file_name += std::to_string(current_number_of_files) + ".txt";
+    }
+
+    auto header = logger.makeHeaderLine();
+
+    _system.filesystem.write_file(file_name.c_str(), header.c_str(), header.size(), false);
 };
 
 Types::CoreTypes::State_ptr_t Record::update()
 {
-    // logger.esplogData(_system);
-    delay(200); //simulate doing startup tasks
+    digitalWrite(PinMap::LED_RED, !digitalRead(PinMap::LED_RED));
+    std::string line = logger.makeLogLine(_system);
+    _system.filesystem.append_line(file_name.c_str(), line.c_str());
 
     return nullptr;
 };

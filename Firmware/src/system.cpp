@@ -45,7 +45,7 @@ void System::setupSPI()
     hspi.setDataMode(SPI_MODE0);
 
     vspi.begin(PinMap::IC_SCLK,PinMap::IC_MISO,PinMap::IC_MOSI);
-    vspi.setFrequency(1000000);
+    vspi.setFrequency(8000000);
     vspi.setBitOrder(MSBFIRST);
     vspi.setDataMode(SPI_MODE0); // Set the SPI data mode
 }

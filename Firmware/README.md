@@ -12,3 +12,5 @@ Build using platformIO. Detailed build instructions on the wiki.
 # Testing
 WIP
 
+
+need to check speed of logging possibility 50Hz is the target but maybe not achievable

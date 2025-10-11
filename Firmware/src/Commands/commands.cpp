@@ -3,6 +3,8 @@
 #include "system.h"
 #include "States/msc.h"
 
+#include "esp_log.h"
+
 void Commands::TelemetryCommand(System& system, const RnpPacketSerialized& packet) 
 {
 
@@ -86,7 +88,8 @@ void Commands::FreeRamCommand(System& sm, const RnpPacketSerialized& packet)
 		message.header.source = packet.header.destination;
 		message.header.destination = packet.header.source;
 		message.header.uid = packet.header.uid;
-		sm.networkmanager.sendPacket(message);
+		ESP_LOGI("FreeRamCommand0", "Free RAM");
+		// sm.networkmanager.sendPacket(message);
 	}
 	else if (commandpacket.arg == 1)
 	{
@@ -96,7 +99,8 @@ void Commands::FreeRamCommand(System& sm, const RnpPacketSerialized& packet)
 		responsePacket.header.source = packet.header.destination;
 		responsePacket.header.destination = packet.header.source;
 		responsePacket.header.uid = packet.header.uid;
-		sm.networkmanager.sendPacket(responsePacket);	
+		ESP_LOGI("FreeRamCommand1", "Free RAM");
+		// sm.networkmanager.sendPacket(responsePacket);	
 	}
 	
 }

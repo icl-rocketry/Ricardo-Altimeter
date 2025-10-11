@@ -20,7 +20,9 @@ class FileSystem {
         void format_flash();
         void print_disk_space();
         void print_files(const char *start = "0:/");
-
+        int getNumberOfFiles();
+        void clear_all_files();
+        void clear_directory_recursive(const char *path);
         static FileSystem *instance();
 
         DSTATUS disk_initialize();

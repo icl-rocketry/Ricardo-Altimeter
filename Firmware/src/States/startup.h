@@ -11,6 +11,7 @@
 #include "Config/types.h"
 #include "States/msc.h"
 #include "States/record.h"
+#include "States/reset.h"
 
 class Startup : public Types::CoreTypes::State_t
 {

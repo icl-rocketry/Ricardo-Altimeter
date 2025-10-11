@@ -229,6 +229,23 @@ void FileSystem::list_dir_recursive(const char *path, int depth,
     f_closedir(&dir);
 }
 
+int FileSystem::getNumberOfFiles() {
+    if (!mounted_) {
+        ESP_LOGI(TAG, "Filesystem not mounted");
+        return 0;
+    }
+
+    (void)disk_ioctl(CTRL_SYNC, nullptr);  // flush pending writes to NAND/Dhara
+
+    const char *root = "0:/";
+    uint32_t files = 0, dirs = 0;
+    uint64_t bytes = 0;
+
+    list_dir_recursive(root, 0, files, dirs, bytes);
+    return files;
+}
+
+
 bool FileSystem::format(uint16_t /*au_kb*/) {
     // Work buffer: at least FF_MAX_SS bytes
     static uint8_t work[FF_MAX_SS];
@@ -256,6 +273,89 @@ void FileSystem::unmount()
         mounted_ = false;
     }
     file_system_unregister_diskio(kDrv);
+}
+
+void FileSystem::clear_all_files() {
+    if (!mounted_) {
+        ESP_LOGI(TAG, "Filesystem not mounted — cannot clear files");
+        return;
+    }
+
+    ESP_LOGI(TAG, "Clearing all files from flash...");
+
+    const char *root = "0:/";
+    FF_DIR dir;
+    FILINFO fno;
+
+    // Open root directory
+    FRESULT fr = f_opendir(&dir, root);
+    if (fr != FR_OK) {
+        ESP_LOGI(TAG, "f_opendir('%s') -> %d", root, (int)fr);
+        return;
+    }
+
+    while (true) {
+        fr = f_readdir(&dir, &fno);
+        if (fr != FR_OK || fno.fname[0] == '\0') break;
+
+        // Construct full path
+        char full_path[256];
+        snprintf(full_path, sizeof(full_path), "%s%s", root, fno.fname);
+
+        if (fno.fattrib & AM_DIR) {
+            // Recursively delete subdirectories
+            ESP_LOGI(TAG, "Deleting directory: %s", full_path);
+            clear_directory_recursive(full_path);
+        } else {
+            ESP_LOGI(TAG, "Deleting file: %s", full_path);
+            FRESULT del_fr = f_unlink(full_path);
+            if (del_fr != FR_OK) {
+                ESP_LOGI(TAG, "Failed to delete %s (err %d)", full_path, (int)del_fr);
+            }
+        }
+    }
+
+    f_closedir(&dir);
+    ESP_LOGI(TAG, "All files cleared.");
+}
+
+void FileSystem::clear_directory_recursive(const char *path) {
+    FF_DIR dir;
+    FILINFO fno;
+
+    FRESULT fr = f_opendir(&dir, path);
+    if (fr != FR_OK) {
+        ESP_LOGI(TAG, "f_opendir('%s') -> %d", path, (int)fr);
+        return;
+    }
+
+    while (true) {
+        fr = f_readdir(&dir, &fno);
+        if (fr != FR_OK || fno.fname[0] == '\0') break;
+
+        char full_path[256];
+        snprintf(full_path, sizeof(full_path), "%s/%s", path, fno.fname);
+
+        if (fno.fattrib & AM_DIR) {
+            clear_directory_recursive(full_path);
+        } else {
+            ESP_LOGI(TAG, "Deleting file: %s", full_path);
+            FRESULT del_fr = f_unlink(full_path);
+            if (del_fr != FR_OK) {
+                ESP_LOGI(TAG, "Failed to delete %s (err %d)", full_path, (int)del_fr);
+            }
+        }
+    }
+
+    f_closedir(&dir);
+
+    // Finally, remove this directory itself (except root)
+    if (strcmp(path, "0:/") != 0) {
+        FRESULT rmdir_fr = f_unlink(path);
+        if (rmdir_fr != FR_OK) {
+            ESP_LOGI(TAG, "Failed to remove dir %s (err %d)", path, (int)rmdir_fr);
+        }
+    }
 }
 
 void FileSystem::handover_to_usb() { unmount(); }
