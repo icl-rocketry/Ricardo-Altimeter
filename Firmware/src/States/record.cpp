@@ -39,13 +39,17 @@ void Record::initialize()
     auto header = logger.makeHeaderLine();
 
     _system.filesystem.write_file(file_name.c_str(), header.c_str(), header.size(), false);
+    last_log_time = millis();
 };
 
 Types::CoreTypes::State_ptr_t Record::update()
 {
-    digitalWrite(PinMap::LED_RED, !digitalRead(PinMap::LED_RED));
-    std::string line = logger.makeLogLine(_system);
-    _system.filesystem.append_line(file_name.c_str(), line.c_str());
+    if (millis() - last_log_time > 50) {
+        digitalWrite(PinMap::LED_RED, !digitalRead(PinMap::LED_RED));
+        std::string line = logger.makeLogLine(_system);
+        _system.filesystem.append_line(file_name.c_str(), line.c_str());
+        last_log_time = millis();
+    }
 
     return nullptr;
 };

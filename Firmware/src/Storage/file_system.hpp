@@ -16,7 +16,9 @@ class FileSystem {
 
         bool write_file(const char* path, const void* data, size_t len, bool append);
         bool append_line(const char* path, const char* line);
-        
+        bool journal_write(const char* path, const void* data, size_t len);
+        bool flush_journal(const char* path, bool append = true);
+
         void format_flash();
         void print_disk_space();
         void print_files(const char *start = "0:/");
@@ -52,6 +54,8 @@ class FileSystem {
         uint32_t cache_lpage_ = 0xFFFFFFFFu;
         bool     cache_dirty_ = false;
         
+        std::vector<uint8_t> journal_buf_;
+        static constexpr int journal_buf_max_ = 4096 * 10 * 2; // max size before auto-flush
         bool format(uint16_t au_kb = 16); // allocation unit (cluster) size in KB (e.g., 4, 8, 16, ...)
         void unmount();
         void list_dir_recursive(const char *path, int depth,

@@ -3,9 +3,9 @@ import csv
 
 # === Configuration ===
 INPUT_DIR = "raw_data"
-INPUT_FILE = os.path.join(INPUT_DIR, "LOG04.TXT")  # Path to your input text file
+INPUT_FILE = os.path.join(INPUT_DIR, "LOG08.TXT")  # Path to your input text file
 OUTPUT_DIR = "processed_data"
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, "second_test.csv")
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, "faster_test7.csv")
 
 def convert_txt_to_csv(input_path, output_path):
     # Ensure output directory exists

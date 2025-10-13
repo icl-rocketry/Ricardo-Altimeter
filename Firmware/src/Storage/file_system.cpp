@@ -53,39 +53,59 @@ bool FileSystem::setup(bool mkfs_if_needed)
         file_system_unregister_diskio(kDrv);
         return false;
     }
+    journal_buf_.reserve(journal_buf_max_);
     mounted_ = true;
     return true;
 }
 
-bool FileSystem::write_file(const char* path, const void* data, size_t len, bool append)
+bool FileSystem::journal_write(const char* path, const void* data, size_t len)
 {
-    if (!mounted_) return false;              // not mounted
-    // If you keep a flag like `usb_owned_` after handover_to_usb(), guard here:
-    // if (usb_owned_) return false;
+    if (!mounted_) return false;
+
+    if (journal_buf_.size() + len > journal_buf_max_) {
+        flush_journal(path, true);
+    }
+    const uint8_t* bytes = static_cast<const uint8_t*>(data);
+    journal_buf_.insert(journal_buf_.end(), bytes, bytes + len);
+
+    return true;
+
+}
+
+bool FileSystem::flush_journal(const char* path, bool append)
+{
+    if (!mounted_ || journal_buf_.empty()) return false;
 
     FIL f;
-    BYTE mode = FA_WRITE | FA_OPEN_ALWAYS;    // create if missing
+    BYTE mode = FA_WRITE | (append ? FA_OPEN_ALWAYS : FA_CREATE_ALWAYS);
     FRESULT fr = f_open(&f, path, mode);
     if (fr != FR_OK) return false;
 
     if (append) {
         fr = f_lseek(&f, f_size(&f));
         if (fr != FR_OK) { f_close(&f); return false; }
-    } else {
-        // If you want "truncate" semantics instead of OPEN_ALWAYS:
-        // f_close(&f); return f_open(&f, path, FA_WRITE | FA_CREATE_ALWAYS) == FR_OK;
     }
 
-    UINT w = 0;
-    fr = f_write(&f, data, (UINT)len, &w);
+    UINT written = 0;
+    fr = f_write(&f, journal_buf_.data(), (UINT)journal_buf_.size(), &written);
     if (fr == FR_OK) f_sync(&f);
     f_close(&f);
-    return (fr == FR_OK && w == len);
+
+    bool ok = (fr == FR_OK && written == journal_buf_.size());
+    if (ok) journal_buf_.clear();
+    return ok;
+}
+
+bool FileSystem::write_file(const char* path, const void* data, size_t len, bool append)
+{
+    // optional compatibility — can just delegate to journal + flush
+    journal_write(path, data, len);
+    return flush_journal(path, append);
 }
 
 bool FileSystem::append_line(const char* path, const char* line)
 {
-    return write_file(path, line, std::strlen(line), /*append=*/true);
+    return journal_write(path, line, std::strlen(line));
 }
 
 void FileSystem::format_flash() {

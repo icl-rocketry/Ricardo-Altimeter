@@ -27,4 +27,5 @@ class Record : public Types::CoreTypes::State_t
         Logger logger;
         std::string file_name;
         int counter;
+        uint32_t last_log_time;
 };

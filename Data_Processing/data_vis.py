@@ -5,7 +5,7 @@ import os
 
 # === Configuration ===
 # You can specify a file path as a command-line argument, or default to processed_data/data.csv
-DEFAULT_FILE = os.path.join("processed_data", "second_test.csv")
+DEFAULT_FILE = os.path.join("processed_data", "faster_test7.csv")
 
 def plot_time_differences(csv_path):
     # Read the CSV
@@ -22,7 +22,7 @@ def plot_time_differences(csv_path):
 
     # Plot
     plt.figure(figsize=(10, 5))
-    plt.plot(df["t_ms"], df["Δt_ms"]/1000, marker="o", linestyle="-", markersize=3)
+    plt.plot(df["t_ms"]/1000, df["Δt_ms"], marker="o", linestyle="-", markersize=3)
     plt.title("Time Difference Between Consecutive Readings (Δt_ms)")
     plt.xlabel("Timestamp (t_ms)")
     plt.ylabel("Δt_ms (seconds)")
