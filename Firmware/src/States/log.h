@@ -9,15 +9,12 @@
 #include "Config/pinmap_config.h"
 #include "Config/systemflags_config.h"
 #include "Config/types.h"
-#include "States/msc.h"
-#include "States/record.h"
-#include "States/reset.h"
-#include "States/log.h"
+#include "Sensors/logger.h"
 
-class Startup : public Types::CoreTypes::State_t
+class Log : public Types::CoreTypes::State_t
 {
     public:
-        Startup(System& system);
+        Log(System& system);
 
         void initialize() override;
 
@@ -27,5 +24,8 @@ class Startup : public Types::CoreTypes::State_t
 
     private:
         System& _system;
-        uint32_t counter;
+        Logger logger;
+        std::string file_name;
+        int counter;
+        uint32_t last_log_time;
 };

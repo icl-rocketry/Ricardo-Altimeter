@@ -21,13 +21,6 @@ void System::systemSetup() {
 
     statemachine.initalize(std::make_unique<Startup>(*this));
 
-    delay(3000); //wait forem filesystem; printing purposes
-
-    ESP_LOGI("System","Setting up filesystem...");
-    ESP_LOGI("System","Filesystem setup %s", filesystem.setup() ? "succeeded" : "failed");
-    filesystem.print_disk_space();
-    filesystem.print_files();
-
 };
 
 void System::systemUpdate(){

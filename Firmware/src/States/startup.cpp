@@ -21,9 +21,11 @@ void Startup::initialize()
 {
     State::initialize(); // call parent initialize first!
     _system.commandhandler.enableCommands({Commands::ID::Free_Ram});
+
     digitalWrite(PinMap::LED_RED, HIGH);
     digitalWrite(PinMap::LED_BLUE, HIGH);
     digitalWrite(PinMap::LED_GREEN, LOW);
+    
     counter = 0;
 };
 
@@ -38,7 +40,8 @@ Types::CoreTypes::State_ptr_t Startup::update()
         // ESP_LOGI("Startup", "Switching to Logging state");
         // return std::make_unique<Reset>(_system);
         // return std::make_unique<MSC>(_system);
-        return std::make_unique<Record>(_system);
+        // return std::make_unique<Record>(_system);
+        // return std::make_unique<Log>(_system);
 
     }
     return nullptr;

@@ -11,6 +11,7 @@ class Logger {
 
         void esplogData(ForwardDecl_SystemClass& system);
         std::string makeLogLine(ForwardDecl_SystemClass& system); // log line roughly 200 bytes (177 on test but want to leave margin)
+        std::string makePrintLine(ForwardDecl_SystemClass& system);
         std::string makeHeaderLine();
     private:
 

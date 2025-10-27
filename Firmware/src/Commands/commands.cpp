@@ -89,7 +89,7 @@ void Commands::FreeRamCommand(System& sm, const RnpPacketSerialized& packet)
 		message.header.destination = packet.header.source;
 		message.header.uid = packet.header.uid;
 		ESP_LOGI("FreeRamCommand0", "Free RAM");
-		// sm.networkmanager.sendPacket(message);
+		sm.networkmanager.sendPacket(message);
 	}
 	else if (commandpacket.arg == 1)
 	{
@@ -100,7 +100,7 @@ void Commands::FreeRamCommand(System& sm, const RnpPacketSerialized& packet)
 		responsePacket.header.destination = packet.header.source;
 		responsePacket.header.uid = packet.header.uid;
 		ESP_LOGI("FreeRamCommand1", "Free RAM");
-		// sm.networkmanager.sendPacket(responsePacket);	
+		sm.networkmanager.sendPacket(responsePacket);	
 	}
 	
 }

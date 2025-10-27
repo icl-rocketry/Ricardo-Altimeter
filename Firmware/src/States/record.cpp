@@ -26,7 +26,10 @@ void Record::initialize()
     digitalWrite(PinMap::LED_BLUE, LOW);
     digitalWrite(PinMap::LED_GREEN, HIGH);
 
-    delay(1000); //wait a second to ensure logger output is seen before writing to FS
+    ESP_LOGI("System","Setting up filesystem...");
+    ESP_LOGI("System","Filesystem setup %s", _system.filesystem.setup() ? "succeeded" : "failed");
+    _system.filesystem.print_disk_space();
+    _system.filesystem.print_files();
 
     int current_number_of_files = _system.filesystem.getNumberOfFiles();
     file_name = "0:/LOG";
