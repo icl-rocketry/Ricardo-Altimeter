@@ -1,53 +1,29 @@
 #pragma once
-/**
- * @file h3lis331dl.h
- * @author Kiran de Silva (you@domain.com)
- * @brief Sensor class for h3lis331dl high g accelerometer. 
- * Based on the sparkfun library https://github.com/sparkfun/SparkFun_LIS331_Arduino_Library
- * 
- * @version 0.1
- * @date 2022-04-07
- * 
- * @copyright Copyright (c) 2022
- * 
- */
 
-
-#include <SPI.h>
-
-#include "sensorStructs.h"
-
-#include <libriccore/riccorelogging.h>
-
-#include "Config/types.h"
-
-#include "Helpers/axeshelper.h"
+#include "sensor_structs.h"
+#include "driver/spi_master.h"
 
 
 class H3LIS331DL{
     public:
-        H3LIS331DL(SPIClass& spi,Types::CoreTypes::SystemStatus_t& systemstatus,uint8_t cs);
+        H3LIS331DL(spi_host_device_t host_spi, uint8_t cs);
 
-        void setup(const std::array<uint8_t,3>& axesOrder,const std::array<bool,3>& axesFlip);
+        void setup();
 
         void update(SensorStructs::ACCEL_3AXIS_t& data);
 
         void startCalibrateBias();
 
     private:
-    
-
-        SPIClass& _spi;
-        Types::CoreTypes::SystemStatus_t& _systemstatus;
+        spi_host_device_t _host_spi;
         const uint8_t _cs;
 
-        AxesHelper<> axeshelper;
+        spi_device_handle_t _spi;
 
         bool alive();
 
-        void writeRegister(uint8_t reg, uint8_t *data, uint8_t len);
-        void readRegister(uint8_t reg_address, uint8_t *data, uint8_t len);
-        uint8_t readRegister(uint8_t reg);
+        void writeRegister(uint8_t reg, uint8_t value);
+        void readRegister(uint8_t reg_address, uint8_t *data);
 
         enum power_mode
         {
@@ -86,25 +62,9 @@ class H3LIS331DL{
         void setODR(data_rate drate);
         void axesEnable(bool enable);
         void readAxes(float &x, float &y, float &z);
-        void readRawAxes(int16_t &x, int16_t &y, int16_t &z);
-        void calibrateBias();
-        void writeAccelBias();
-        void loadAccelBias();
         void setFullScale(fs_range range);
 
-        float raw_to_g;
-
-        static constexpr uint16_t number_measurements = 500;
-        uint16_t measurements_made;
-
-        int16_t ax, ay, az;
-        int32_t sum_ax, sum_ay, sum_az;
-
-        bool calibrating;
-
-        int16_t offset_ax{0};
-        int16_t offset_ay{0};
-        int16_t offset_az{0};        
+        float raw_to_g;    
 
         //registers
         static constexpr uint8_t WHO_AM_I = 0x0F;

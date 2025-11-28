@@ -5,10 +5,12 @@
  */
 #pragma once
 
+#include "driver/gpio.h"
+
 namespace PinMap{
-    static constexpr int LED_RED = 1;
-    static constexpr int LED_BLUE = 2;
-    static constexpr int LED_GREEN = 4;
+    static constexpr gpio_num_t LED_RED = GPIO_NUM_1;
+    static constexpr gpio_num_t LED_BLUE = GPIO_NUM_2;
+    static constexpr gpio_num_t LED_GREEN = GPIO_NUM_4;
 
     // for flash ic (using standard spi mode)
     static constexpr int IC_SCLK = 9; // 120Mhz

@@ -1,66 +1,66 @@
-#pragma once
-#include <stdint.h>
-#include <stddef.h>
-#include "ff.h"          // ChaN FatFs
-#include "diskio.h"      // disk I/O glue
-#include "nand_flash.hpp"
-#include "translatedflash_ctx.hpp"
-#include "diskio_dhara.hpp"
-#include "esp_log.h"
+// #pragma once
+// #include <stdint.h>
+// #include <stddef.h>
+// #include "ff.h"          // ChaN FatFs
+// #include "diskio.h"      // disk I/O glue
+// #include "nand_flash.hpp"
+// #include "translatedflash_ctx.hpp"
+// #include "diskio_dhara.hpp"
+// #include "esp_log.h"
 
-class FileSystem {
-    public:
-        FileSystem(NANDFlash &nandflash);
+// class FileSystem {
+//     public:
+//         FileSystem(NANDFlash &nandflash);
 
-        bool setup(bool mkfs_if_needed = true);
+//         bool setup(bool mkfs_if_needed = true);
 
-        bool write_file(const char* path, const void* data, size_t len, bool append);
-        bool append_line(const char* path, const char* line);
-        bool journal_write(const char* path, const void* data, size_t len);
-        bool flush_journal(const char* path, bool append = true);
+//         bool write_file(const char* path, const void* data, size_t len, bool append);
+//         bool append_line(const char* path, const char* line);
+//         bool journal_write(const char* path, const void* data, size_t len);
+//         bool flush_journal(const char* path, bool append = true);
 
-        void format_flash();
-        void print_disk_space();
-        void print_files(const char *start = "0:/");
-        int getNumberOfFiles();
-        void clear_all_files();
-        void clear_directory_recursive(const char *path);
-        static FileSystem *instance();
+//         void format_flash();
+//         void print_disk_space();
+//         void print_files(const char *start = "0:/");
+//         int getNumberOfFiles();
+//         void clear_all_files();
+//         void clear_directory_recursive(const char *path);
+//         static FileSystem *instance();
 
-        DSTATUS disk_initialize();
-        DRESULT disk_read(uint8_t *buff, uint32_t lba, uint32_t count);
-        DRESULT disk_write(const uint8_t *buff, uint32_t lba, uint32_t count);
-        DRESULT disk_ioctl(uint8_t cmd, void *buff);
+//         DSTATUS disk_initialize();
+//         DRESULT disk_read(uint8_t *buff, uint32_t lba, uint32_t count);
+//         DRESULT disk_write(const uint8_t *buff, uint32_t lba, uint32_t count);
+//         DRESULT disk_ioctl(uint8_t cmd, void *buff);
 
-        void handover_to_usb();
-        bool reclaim_from_usb();
-        uint32_t sector_count_512() const;
+//         void handover_to_usb();
+//         bool reclaim_from_usb();
+//         uint32_t sector_count_512() const;
 
-    private:
-        NANDFlash &nandflash_;
-        TranslatedFlashCtx tf_;
+//     private:
+//         NANDFlash &nandflash_;
+//         TranslatedFlashCtx tf_;
         
-        dhara_map map_; // dhara map structure
-        uint8_t dhara_page_buf_[1 << 11]; // 2048B scratch (page-sized)
+//         dhara_map map_; // dhara map structure
+//         uint8_t dhara_page_buf_[1 << 11]; // 2048B scratch (page-sized)
         
-        bool load_page_to_cache(uint32_t lpage);
-        bool flush_cache_if_dirty();
+//         bool load_page_to_cache(uint32_t lpage);
+//         bool flush_cache_if_dirty();
         
-        FATFS fs_{};
-        bool  mounted_ = false;
+//         FATFS fs_{};
+//         bool  mounted_ = false;
         
-        // Cache for bridging 512B LBAs to Dhara logical sectors (e.g., 2048B)
-        uint8_t  page_cache_[4096];
-        uint32_t cache_lpage_ = 0xFFFFFFFFu;
-        bool     cache_dirty_ = false;
+//         // Cache for bridging 512B LBAs to Dhara logical sectors (e.g., 2048B)
+//         uint8_t  page_cache_[4096];
+//         uint32_t cache_lpage_ = 0xFFFFFFFFu;
+//         bool     cache_dirty_ = false;
         
-        std::vector<uint8_t> journal_buf_;
-        static constexpr int journal_buf_max_ = 4096 * 10 * 2; // max size before auto-flush
-        bool format(uint16_t au_kb = 16); // allocation unit (cluster) size in KB (e.g., 4, 8, 16, ...)
-        void unmount();
-        void list_dir_recursive(const char *path, int depth,
-                            uint32_t &files, uint32_t &dirs, uint64_t &bytes);
-        void make_indent(int depth, char* out, size_t out_sz);
-        const char *TAG = "FS";
+//         std::vector<uint8_t> journal_buf_;
+//         static constexpr int journal_buf_max_ = 4096 * 10 * 2; // max size before auto-flush
+//         bool format(uint16_t au_kb = 16); // allocation unit (cluster) size in KB (e.g., 4, 8, 16, ...)
+//         void unmount();
+//         void list_dir_recursive(const char *path, int depth,
+//                             uint32_t &files, uint32_t &dirs, uint64_t &bytes);
+//         void make_indent(int depth, char* out, size_t out_sz);
+//         const char *TAG = "FS";
 
-    };
+//     };

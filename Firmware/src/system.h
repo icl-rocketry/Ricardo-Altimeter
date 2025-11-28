@@ -1,17 +1,12 @@
 #pragma once
 
-#include <SPI.h>
-
-
-#include <libriccore/riccoresystem.h>
-
+#include "esp_log.h"
+#include "driver/gpio.h"
+#include "driver/spi_master.h"
 
 #include "Config/systemflags_config.h"
-#include "Config/commands_config.h"
 #include "Config/pinmap_config.h"
 #include "Config/general_config.h"
-
-#include "Commands/commands.h"
 
 #include "Sensors/sensors.h"
 #include "Sensors/estimator.h"
@@ -20,10 +15,9 @@
 
 #include "Storage/nand_flash.hpp"
 #include "Storage/file_system.hpp"
+#include "Commands/packets/telemetry_packet.h"
 
-#include "esp_log.h"
-
-class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
+class System
 {
     public:
 
@@ -33,20 +27,18 @@ class System : public RicCoreSystem<System,SYSTEM_FLAG,Commands::ID>
 
         void systemUpdate();
 
-        SPIClass vspi;
-        SPIClass hspi;
         
         Sensors sensors;
-        Estimator estimator;
+        TelemetryPacket telemetry;
+        // Estimator estimator;
 
-        NANDFlash nandflash;
-        FileSystem filesystem;
+        // NANDFlash nandflash;
+        // FileSystem filesystem;
     private:
 
         void setupSPI();
         void setupPins();
-        void loadConfig();
 
-
+        static constexpr char TAG[] = "SYSTEM";
 
 };

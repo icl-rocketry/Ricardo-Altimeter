@@ -1,58 +1,34 @@
 #include "icm_20608.h"
 
-#include <Arduino.h>
-#include <SPI.h>
-#include <string>
+ICM_20608::ICM_20608(spi_host_device_t host_spi, uint8_t cs):
+    _host_spi(host_spi),
+    _cs(cs)
+{};
 
-#include <libriccore/riccorelogging.h>
-
-#include "Config/types.h"
-#include "Config/systemflags_config.h"
-
-#include <Preferences.h>
-
-ICM_20608::ICM_20608(SPIClass& spi,Types::CoreTypes::SystemStatus_t& systemstatus,uint8_t cs):
-_spi(spi),
-_systemstatus(systemstatus),
-_cs(cs), // update this with proper config value
-_settings(8000000,MSBFIRST,SPI_MODE0)
-{}
-
-void ICM_20608::setup(const std::array<uint8_t,3>& axesOrder, const std::array<bool,3> axesFlip)
+void ICM_20608::setup()
 {
+    spi_device_interface_config_t devcfg = {
+        .mode = 0,                         
+        .clock_speed_hz = 8 * 1000 * 1000, // 8 MHz
+        .spics_io_num = _cs,    
+        .queue_size = 3,
+    };
+    ESP_ERROR_CHECK(spi_bus_add_device(_host_spi, &devcfg, &_spi));
+
     writeRegister(PWR_MGMT_1, RESET);     // reset whole device
-    delay(100);                            
+    vTaskDelay(pdMS_TO_TICKS(100));
 
     writeRegister(USER_CTRL, 0x00);       // disable fifo
 
     writeRegister(USER_CTRL, I2C_IF_DIS); // disable I2C mode as recommended in datasheet
 
     writeRegister(PWR_MGMT_1, CLK_ZGYRO); // set clock source
-    delay(5);
-    //check we are alive
-    if (!alive()){
-         _systemstatus.newFlag(SYSTEM_FLAG::ERROR_IMU, "Unable to initialize the icm 20608");
-        return;
-    }
-    //set gyro and accel ranges -> update this later to process ranges provided
+    vTaskDelay(pdMS_TO_TICKS(5));
+
     //from config
-    setRange(AccelRange::A_16_G,GyroRange::G_2000_DEGS); 
+    setRange(AccelRange::A_8_G,GyroRange::G_1000_DEGS); 
 
-    writeRegister(PWR_MGMT_2,0x00); //switch everything on
-    
-    //check we are alive
-    if (!alive()){
-         _systemstatus.newFlag(SYSTEM_FLAG::ERROR_IMU, "Unable to initialize the icm 20608");
-        return;
-    }
-
-    loadAccelGyroBias(); //load offsets from nvs
-
-    axeshelper.setOrder(axesOrder);
-    axeshelper.setFlip(axesFlip);
-
-    RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("IMU Initialized");
-
+    writeRegister(PWR_MGMT_2,0x00); //switch everything on    
 }
 
 bool ICM_20608::alive(){
@@ -61,64 +37,9 @@ bool ICM_20608::alive(){
 
 void ICM_20608::update(SensorStructs::ACCELGYRO_6AXIS_t& data)
 {
-  
-    readAccel(data.ax,data.ay,data.az);
-    readGyro(data.gx,data.gy,data.gz);
+    readAccel(data.ax, data.ay, data.az);
+    readGyro(data.gx, data.gy, data.gz);
     readTemp(data.temp);
-
-    if (calibrating) {
-        calibrateBias();
-    }
-
-}
-
-void ICM_20608::startCalibrateBias()
-{
-
-    RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Accel calibration started");
-
-    measurements_made = 0;
-
-    sum_gx = 0, sum_gy = 0, sum_gz = 0;
-    sum_ax = 0, sum_ay = 0, sum_az = 0;
-
-    calibrating = true;
-}
-
-void ICM_20608::calibrateBias()
-{
-
-    readGyroRaw(gx, gy, gz);
-    readAccelRaw(ax, ay, az);
-
-    sum_gx += gx;
-    sum_gy += gy;
-    sum_gz += gz;
-
-    sum_ax += ax;
-    sum_ay += ay;
-    sum_az += az;
-
-    measurements_made += 1;
-
-    if (measurements_made == number_measurements){
-
-        offset_gx = -sum_gx / number_measurements;
-        offset_gy = -sum_gy / number_measurements;
-        offset_gz = -sum_gz / number_measurements;
-        offset_ax = -sum_ax / number_measurements;
-        offset_ay = -sum_ay / number_measurements;
-
-        offset_az = ( 1 / accel_lsb_to_g) - sum_az / number_measurements; 
-        // offset_az = (- 1 / accel_lsb_to_g) - sum_az / number_measurements; //! This is wrong
-        writeAccelGyroBias();
-
-        calibrating = false;
-
-        RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("Accel calibration completed");
-
-    }
-
 }
 
 void ICM_20608::setRange(AccelRange accel_range,GyroRange gyro_range)
@@ -164,141 +85,110 @@ void ICM_20608::setRange(AccelRange accel_range,GyroRange gyro_range)
     }
 }
 
-void ICM_20608::writeRegister(uint8_t reg, uint8_t val)
+void ICM_20608::writeRegister(uint8_t reg, uint8_t value)
 {
-    _spi.beginTransaction(_settings);
-    digitalWrite(_cs, LOW);
-    _spi.transfer(reg & ~(1 << 7)); // MSB = 0 for Writing
-    _spi.transfer(val);
-    digitalWrite(_cs, HIGH);
-    _spi.endTransaction();
+    uint8_t tx[2] = { static_cast<uint8_t>(reg & 0x7F), value }; // MSB=0 for write
+    spi_transaction_t t{};
+    t.length    = 16;      // 2 bytes
+    t.tx_buffer = tx;
+
+    ESP_ERROR_CHECK(spi_device_transmit(_spi, &t));
 }
 
-uint8_t ICM_20608::readRegister(uint8_t reg)
+uint8_t ICM_20608::readRegister(uint8_t reg) {
+    uint8_t tx[2] = { uint8_t(reg | 0x80), 0x00 };
+    uint8_t rx[2] = {0};
+
+    spi_transaction_t t = {};
+    t.length    = 16;           // total bits
+    t.tx_buffer = tx;
+    t.rx_buffer = rx;
+    ESP_ERROR_CHECK(spi_device_transmit(_spi, &t));
+    return rx[1];               // second byte is the value
+}
+
+bool ICM_20608::readGyro(float &x_dps, float &y_dps, float &z_dps)
 {
-    _spi.beginTransaction(_settings);
-    digitalWrite(_cs, LOW);
-    _spi.transfer(reg | (1 << 7)); // MSB = 1 for Reading
-    uint8_t val = _spi.transfer(0);
-    delay(1);
-    digitalWrite(_cs, HIGH);
-    _spi.endTransaction();
-    return val;
-}
+    // tx[0] = address|READ, remaining dummy bytes to clock out data
+    uint8_t tx[1 + 6] = { uint8_t(GYRO_XOUT_H | 0x80), 0,0,0,0,0,0 };
+    uint8_t rx[1 + 6] = { 0 };
 
-void ICM_20608::readGyro(float &x, float &y, float &z)
-{
-    int16_t xi, yi, zi;
+    spi_transaction_t t = {};
+    t.length    = 8 * sizeof(tx);   // bits
+    t.tx_buffer = tx;
+    t.rx_buffer = rx;
 
-    readGyroRaw(xi, yi, zi);
-
-    std::array<float, 3> gyro = axeshelper(std::array<float, 3>{(float)(xi + offset_gx) * gyro_lsb_to_degs,
-                                                                (float)(yi + offset_gy) * gyro_lsb_to_degs,
-                                                                 (float)(zi + offset_gz) * gyro_lsb_to_degs});
-
-    x = gyro[0];
-    y = gyro[1];
-    z = gyro[2];
-}
-
-void ICM_20608::readAccel(float &x, float &y, float &z)
-{
-    int16_t xi, yi, zi;
-    readAccelRaw(xi, yi, zi);
-    std::array<float, 3> accel = axeshelper(std::array<float, 3>{(float)(xi + offset_ax) * accel_lsb_to_g,
-                                                                 (float)(yi + offset_ay) * accel_lsb_to_g,
-                                                                  (float)(zi + offset_az) * accel_lsb_to_g});
-
-    x = accel[0];
-    y = accel[1];
-    z = accel[2];
-}
-
-void ICM_20608::readGyroRaw(int16_t &x, int16_t &y, int16_t &z)
-{
-    _spi.beginTransaction(_settings);
-    digitalWrite(_cs, LOW);
-
-    _spi.transfer(GYRO_XOUT_H | (1 << 7));
-    x = ((int16_t)_spi.transfer(GYRO_XOUT_L | (1 << 7))) << 8;
-    x |= _spi.transfer(GYRO_YOUT_H | (1 << 7));
-    y = ((int16_t)_spi.transfer(GYRO_YOUT_L | (1 << 7))) << 8;
-    y |= _spi.transfer(GYRO_ZOUT_H | (1 << 7));
-    z = ((int16_t)_spi.transfer(GYRO_ZOUT_L | (1 << 7))) << 8;
-    z |= _spi.transfer(0);
-
-    digitalWrite(_cs, HIGH);
-    _spi.endTransaction();
-}
-
-void ICM_20608::readAccelRaw(int16_t &x, int16_t &y, int16_t &z)
-{
-    _spi.beginTransaction(_settings);
-    digitalWrite(_cs, LOW);
-
-    _spi.transfer(ACCEL_XOUT_H | (1 << 7));
-    x = ((int16_t)_spi.transfer(ACCEL_XOUT_L | (1 << 7))) << 8;
-    x |= _spi.transfer(ACCEL_YOUT_H | (1 << 7));
-    y = ((int16_t)_spi.transfer(ACCEL_YOUT_L | (1 << 7))) << 8;
-    y |= _spi.transfer(ACCEL_ZOUT_H | (1 << 7));
-    z = ((int16_t)_spi.transfer(ACCEL_ZOUT_L | (1 << 7))) << 8;
-    z |= _spi.transfer(0);
-
-    digitalWrite(_cs, HIGH);
-    _spi.endTransaction();
-}
-
-void ICM_20608::readTempRaw(int16_t& temp)
-{
-    _spi.beginTransaction(_settings);
-    digitalWrite(_cs, LOW);
-
-    _spi.transfer(TEMP_OUT_H | (1 << 7));
-    temp = ((int16_t)_spi.transfer(TEMP_OUT_L | (1 << 7))) << 8;
-    temp |= _spi.transfer(0x00);
-
-    digitalWrite(_cs,HIGH);
-    _spi.endTransaction();
-}
-
-void ICM_20608::readTemp(float& temp)
-{
-    int16_t temp_raw;
-    readTempRaw(temp_raw);
-
-    temp = (((float)temp_raw)/ temperature_sensitivity) + 25.0f;
-}
-
-void ICM_20608::writeAccelGyroBias(){
-    Preferences pref;
-
-    if (!pref.begin("IMU1")){
-        RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs failed to start. Can't write calbration offsets");
-        return;
-    }   
-   
-    if (!pref.putShort("gxBias",offset_gx)){RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs error while writing");};
-    if (!pref.putShort("gyBias",offset_gy)){RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs error while writing");};
-    if (!pref.putShort("gzBias",offset_gz)){RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs error while writing");};
-    if (!pref.putShort("axBias",offset_ax)){RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs error while writing");};
-    if (!pref.putShort("ayBias",offset_ay)){RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs error while writing");};
-    if (!pref.putShort("azBias",offset_az)){RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs error while writing");};
-    
-
-}
-
-void ICM_20608::loadAccelGyroBias(){
-    Preferences pref;
-
-    if (!pref.begin("IMU1",true)){
-        RicCoreLogging::log<RicCoreLoggingConfig::LOGGERS::SYS>("nvs failed to start");
-        return;
+    esp_err_t e = spi_device_transmit(_spi, &t);
+    if (e != ESP_OK) {
+        ESP_LOGE("ICM20608", "SPI gyro read failed: %s", esp_err_to_name(e));
+        return false;
     }
 
-    offset_gx = pref.getShort("gxBias");
-    offset_gy = pref.getShort("gyBias");
-    offset_gz = pref.getShort("gzBias");
-    offset_ax = pref.getShort("axBias");
-    offset_ay = pref.getShort("ayBias");
-    offset_az = pref.getShort("azBias");
+    // rx[0] is junk (captured while sending addr). Data start at rx[1].
+    int16_t gx = int16_t((rx[1] << 8) | rx[2]);
+    int16_t gy = int16_t((rx[3] << 8) | rx[4]);
+    int16_t gz = int16_t((rx[5] << 8) | rx[6]);
+
+    x_dps = gx * gyro_lsb_to_degs;
+    y_dps = gy * gyro_lsb_to_degs;
+    z_dps = gz * gyro_lsb_to_degs;
+
+    return true;
+}
+
+bool ICM_20608::readAccel(float &x_g, float &y_g, float &z_g)
+{
+    // tx[0] = address|READ, remaining are dummy bytes to clock out data
+    uint8_t tx[1 + 6] = { uint8_t(ACCEL_XOUT_H | 0x80), 0,0,0,0,0,0 };
+    uint8_t rx[1 + 6] = { 0 };
+
+    spi_transaction_t t = {};
+    t.length    = 8 * sizeof(tx);   // total bits (1 addr + 6 data)
+    t.tx_buffer = tx;
+    t.rx_buffer = rx;
+
+    esp_err_t e = spi_device_transmit(_spi, &t);
+    if (e != ESP_OK) {
+        ESP_LOGE("ICM20608", "SPI accel read failed: %s", esp_err_to_name(e));
+        return false;
+    }
+
+    // rx[0] is garbage (captured while sending the address). Data start at rx[1].
+    int16_t ax = int16_t((rx[1] << 8) | rx[2]);
+    int16_t ay = int16_t((rx[3] << 8) | rx[4]);
+    int16_t az = int16_t((rx[5] << 8) | rx[6]);
+
+    // Convert to g using your member/constant scale factor (g per LSB)
+    // e.g. accel_lsb_to_g = 1.0f/16384 for ±2g, 1/8192 for ±4g, etc.
+    x_g = ax * accel_lsb_to_g;
+    y_g = ay * accel_lsb_to_g;
+    z_g = az * accel_lsb_to_g;
+
+    return true;
+}
+
+bool ICM_20608::readTemp(float &temp_degC)
+{
+    // Address + two dummy bytes to clock out H and L
+    uint8_t tx[3] = { uint8_t(TEMP_OUT_H | 0x80), 0, 0 };
+    uint8_t rx[3] = { 0 };
+
+    spi_transaction_t t = {};
+    t.length    = 8 * sizeof(tx);  // bits
+    t.tx_buffer = tx;
+    t.rx_buffer = rx;
+
+    esp_err_t e = spi_device_transmit(_spi, &t);
+    if (e != ESP_OK) {
+        ESP_LOGE("ICM20608", "SPI temp read failed: %s", esp_err_to_name(e));
+        return false;
+    }
+
+    // rx[0] is junk; data start at rx[1]
+    int16_t raw = int16_t((rx[1] << 8) | rx[2]);
+
+    float temp_offset_degC  = 25.0f;
+
+    temp_degC = (raw / temperature_sensitivity) + temp_offset_degC;
+    return true;
 }
